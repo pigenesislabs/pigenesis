@@ -1,50 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PiGenesis</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PiGenesis | Engineering Intelligent Systems</title>
+  
+  <!-- Modern Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-  <h2>PiGenesis</h2>
-  <nav>
-    <a href="#about">About</a>
-    <a href="#platform">Platform</a>
-    <a href="#vision">Vision</a>
-  </nav>
-</header>
 
-<section class="hero">
-  <h1>Engineering Intelligent Systems</h1>
-  <p>Building intelligent platforms that bring order to complex workflows.</p>
-  <a class="btn" href="#about">Explore PiGenesis</a>
-</section>
+  <!-- Sticky Glass Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <span class="logo-accent">Pi</span>Genesis
+      </a>
+      <nav class="nav-links">
+        <a href="#about">About</a>
+        <a href="#platform">Platform</a>
+        <a href="#vision">Vision</a>
+      </nav>
+      <a href="#platform" class="btn btn-sm">Get Started</a>
+    </div>
+  </header>
 
-<section id="about">
-<h2>Who We Are</h2>
-<p>PiGenesis is an engineering-first technology company building intelligent systems and workflow platforms.</p>
-</section>
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="badge">
+          <span class="badge-dot"></span> Next-Gen Enterprise Automation
+        </div>
+        <h1>Engineering <span class="gradient-text">Intelligent Systems</span></h1>
+        <p class="hero-subtext">Building high-performance platforms designed to bring structure, clarity, and automation to complex workflows.</p>
+        <div class="hero-buttons">
+          <a class="btn btn-primary" href="#platform">Explore Platform <i class="fa-solid fa-arrow-right"></i></a>
+          <a class="btn btn-secondary" href="#about">Learn More</a>
+        </div>
+      </div>
+      <!-- Background Decorative Light Glow -->
+      <div class="hero-glow"></div>
+    </section>
 
-<section id="platform">
-<h2>Our Platform</h2>
-<div class="grid">
-<div>PI Flow</div>
-<div>PI Docs</div>
-<div>PI AI</div>
-<div>PI Vault</div>
-<div>PI Insight</div>
-<div>More...</div>
-</div>
-</section>
+    <!-- About Section -->
+    <section id="about" class="section">
+      <div class="container">
+        <div class="section-header text-center">
+          <h2>Who We Are</h2>
+          <p class="subtitle">An engineering-first technology company dedicated to solving complexity.</p>
+        </div>
+        <div class="about-card">
+          <p>At <strong>PiGenesis</strong>, we architect resilient, scalable digital systems. By combining enterprise intelligence with seamless user experiences, we build workflow platforms that empower organizations to make smarter decisions and operate effortlessly.</p>
+        </div>
+      </div>
+    </section>
 
-<section id="vision">
-<h2>Vision</h2>
-<p><strong>Creating Order Through Intelligent Systems.</strong></p>
-</section>
+    <!-- Platform Section -->
+    <section id="platform" class="section alt-bg">
+      <div class="container">
+        <div class="section-header text-center">
+          <h2>Our Platform Ecosystem</h2>
+          <p class="subtitle">Interconnected tools engineered for total operational efficiency.</p>
+        </div>
 
-<footer>© 2026 PiGenesis</footer>
-<script src="script.js"></script>
+        <div class="grid">
+          <div class="card">
+            <div class="card-icon"><i class="fa-solid fa-diagram-project"></i></div>
+            <h3>PI Flow</h3>
+            <p>Automate intricate workflow pipelines with continuous logic execution.</p>
+          </div>
+
+          <div class="card">
+            <div class="card-icon"><i class="fa-solid fa-file-contract"></i></div>
+            <h3>PI Docs</h3>
+            <p>Smart document synthesis, extraction, and real-time structured indexing.</p>
+          </div>
+
+          <div class="card card-featured">
+            <div class="card-icon"><i class="fa-solid fa-brain"></i></div>
+            <h3>PI AI</h3>
+            <p>Context-aware artificial intelligence tuned specifically for high-throughput decision systems.</p>
+          </div>
+
+          <div class="card">
+            <div class="card-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <h3>PI Vault</h3>
+            <p>Zero-trust cryptographic data protection and regulatory compliance layer.</p>
+          </div>
+
+          <div class="card">
+            <div class="card-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <h3>PI Insight</h3>
+            <p>Predictive analytics and system telemetry transformed into actionable metrics.</p>
+          </div>
+
+          <div class="card card-more">
+            <div class="card-icon"><i class="fa-solid fa-cubes"></i></div>
+            <h3>And More...</h3>
+            <p>Custom enterprise integrations built to fit your unique tech stack.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vision Section -->
+    <section id="vision" class="section">
+      <div class="container">
+        <div class="vision-banner">
+          <h2>Creating Order Through Intelligent Systems</h2>
+          <p>We envision a future where digital infrastructure operates seamlessly in the background, transforming chaos into clarity.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <p>© 2026 <strong>PiGenesis</strong>. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
