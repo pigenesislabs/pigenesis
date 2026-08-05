@@ -367,18 +367,17 @@
 <header class="header">
   
   <!-- PASTE NEW LOGO HERE -->
-  <a href="#" class="logo" style="display: inline-flex; align-items: center; gap: 14px; text-decoration: none;">
-  <!-- SVG Logo matching your image -->
+ <a href="#" class="logo" style="display: inline-flex; align-items: center; gap: 14px; text-decoration: none;">
+  <!-- SVG Logo Icon -->
   <svg width="44" height="44" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <!-- Neon Cyan to Purple Gradient -->
-      <linearGradient id="ringGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <!-- Logo Ring Gradient: Neon Cyan (#00d2ff) to Deep Neon Purple (#9d4edd) -->
+      <linearGradient id="logoRingGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
         <stop offset="0%" stop-color="#00d2ff" />
-        <stop offset="50%" stop-color="#9d4edd" />
-        <stop offset="100%" stop-color="#6a0ded" />
+        <stop offset="100%" stop-color="#9d4edd" />
       </linearGradient>
 
-      <!-- Glow Effect -->
+      <!-- Neon Glow Effect -->
       <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
         <feGaussianBlur stdDeviation="2.5" result="blur" />
         <feComposite in="SourceGraphic" in2="blur" operator="over" />
@@ -386,9 +385,9 @@
     </defs>
 
     <!-- Outer Gradient Ring -->
-    <circle cx="50" cy="50" r="42" stroke="url(#ringGrad)" stroke-width="4" fill="rgba(0,0,0,0.5)" filter="url(#neonGlow)" />
+    <circle cx="50" cy="50" r="42" stroke="url(#logoRingGrad)" stroke-width="4" fill="rgba(0,0,0,0.4)" filter="url(#neonGlow)" />
 
-    <!-- Stylized Pi/P Monogram Symbol in Center -->
+    <!-- Stylized Pi Monogram Symbol in Center -->
     <g filter="url(#neonGlow)">
       <!-- Top Horizontal Pi Bar -->
       <path d="M 36 34 H 64" stroke="#e0c3fc" stroke-width="6" stroke-linecap="square" />
@@ -401,13 +400,13 @@
     </g>
   </svg>
 
-  <!-- Typography Block -->
+  <!-- Typography Block with Exact Logo Color Match -->
   <div style="display: flex; flex-direction: column; text-align: left;">
     <span style="font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1;">
-      <!-- P is white, i is cyan, G is white, enesis is cyan -->
-      <span style="color: #ffffff;">P</span><span style="color: #00d2ff;">i</span><span style="color: #ffffff;">G</span><span style="color: #00d2ff;">enesis</span>
+      <!-- "Pi" in Neon Cyan, "Genesis" in Neon Purple -->
+      <span style="color: #00d2ff;">Pi</span><span style="color: #9d4edd;">Genesis</span>
     </span>
-    <span style="font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.6rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 5px;">
+    <span style="font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.58rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.12em; margin-top: 5px;">
       Engineering Intelligent Systems
     </span>
   </div>
