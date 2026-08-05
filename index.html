@@ -367,7 +367,7 @@
 <header class="header">
   
   <!-- PASTE NEW LOGO HERE -->
- <a href="#" class="logo" style="display: inline-flex; align-items: center; gap: 14px; text-decoration: none;">
+<a href="#" class="logo" style="display: inline-flex; align-items: center; gap: 14px; text-decoration: none;">
   <!-- SVG Logo Icon -->
   <svg width="44" height="44" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
@@ -377,14 +377,14 @@
         <stop offset="100%" stop-color="#9d4edd" />
       </linearGradient>
 
-      <!-- Neon Glow Effect -->
-      <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur stdDeviation="2.5" result="blur" />
+      <!-- Neon Glow Filter for SVG -->
+      <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
         <feComposite in="SourceGraphic" in2="blur" operator="over" />
       </filter>
     </defs>
 
-    <!-- Outer Gradient Ring -->
+    <!-- Outer Gradient Ring with Glow -->
     <circle cx="50" cy="50" r="42" stroke="url(#logoRingGrad)" stroke-width="4" fill="rgba(0,0,0,0.4)" filter="url(#neonGlow)" />
 
     <!-- Stylized Pi Monogram Symbol in Center -->
@@ -400,12 +400,32 @@
     </g>
   </svg>
 
-  <!-- Typography Block with Exact Logo Color Match -->
+  <!-- Typography Block with REAL Neon Light Glow -->
   <div style="display: flex; flex-direction: column; text-align: left;">
     <span style="font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1;">
-      <!-- "Pi" in Neon Cyan, "Genesis" in Neon Purple -->
-      <span style="color: #00d2ff;">Pi</span><span style="color: #9d4edd;">Genesis</span>
+      
+      <!-- "Pi" in Neon Cyan Glow -->
+      <span style="
+        color: #e0f7fc; 
+        text-shadow: 
+          0 0 4px #00d2ff, 
+          0 0 10px #00d2ff, 
+          0 0 18px rgba(0, 210, 255, 0.8), 
+          0 0 30px rgba(0, 210, 255, 0.4);
+      ">Pi</span><!--
+
+      --><!-- "Genesis" in Neon Purple Glow -->
+      <span style="
+        color: #f3e8ff; 
+        text-shadow: 
+          0 0 4px #b15eff, 
+          0 0 10px #9d4edd, 
+          0 0 18px rgba(157, 78, 221, 0.8), 
+          0 0 30px rgba(157, 78, 221, 0.4);
+      ">Genesis</span>
+
     </span>
+    
     <span style="font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.58rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.12em; margin-top: 5px;">
       Engineering Intelligent Systems
     </span>
