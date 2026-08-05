@@ -5,30 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PiGenesis | Engineering Intelligent Systems</title>
   
-  <!-- Clean Font: Inter -->
+  <!-- Font: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- FontAwesome Icons -->
+  <!-- Icons (FontAwesome) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     /* ==========================================================================
-       1. Global Variables & Reset (Flat, Crisp & Non-Glossy)
+       1. Global Setup & Dark Environmental Background
        ========================================================================== */
     :root {
-      --color-white: #ffffff;
-      --color-bg-subtle: #f8fafc;
-      --text-main: #0f172a;       /* Deep slate black */
-      --text-muted: #64748b;      /* Matte gray */
-      --primary-accent: #6366f1;  /* Indigo accent */
-      --border-color: #e2e8f0;   /* Crisp, flat border */
+      --glass-bg: rgba(30, 32, 38, 0.55);
+      --glass-card-bg: rgba(255, 255, 255, 0.05);
+      --glass-card-hover: rgba(255, 255, 255, 0.08);
       
-      --font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      --border-radius: 12px;
-      --shadow-flat: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
-      --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+      /* Glossy 3D Highlight Borders */
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --glass-border-light: rgba(255, 255, 255, 0.25);
+      --glass-inset-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+      
+      /* 3D Glass Drop Shadows */
+      --glass-3d-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 
+                         0 10px 20px rgba(0, 0, 0, 0.4);
+      --card-3d-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 
+                        0 5px 15px rgba(0, 0, 0, 0.2);
+
+      /* Colors inspired by image buttons */
+      --accent-blue: #007aff;
+      --accent-blue-hover: #0062cc;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --font-stack: 'Inter', system-ui, -apple-system, sans-serif;
     }
 
     * {
@@ -43,196 +53,178 @@
     }
 
     body {
-      font-family: var(--font-family);
-      background-color: var(--color-white);
+      font-family: var(--font-stack);
       color: var(--text-main);
       line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
+      /* Background environment matching spatial background room in reference */
+      background: radial-gradient(circle at 50% 20%, #2b303c 0%, #111318 80%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Container layout styled like the main floating glass panel */
+    .app-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 32px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(35px) saturate(180%);
+      -webkit-backdrop-filter: blur(35px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-3d-shadow), var(--glass-inset-shadow);
+      border-radius: 32px;
     }
 
     /* ==========================================================================
-       2. Utility Styles
-       ========================================================================== */
-    .container {
-      max-width: 1140px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    .section {
-      padding: 96px 0;
-    }
-
-    .text-center { 
-      text-align: center; 
-    }
-
-    .section-title {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: var(--text-main);
-      margin-bottom: 16px;
-      letter-spacing: -0.025em;
-    }
-
-    .section-subtitle {
-      font-size: 1.125rem;
-      color: var(--text-muted);
-      max-width: 650px;
-      margin: 0 auto 56px auto;
-    }
-
-    /* ==========================================================================
-       3. Header & Navigation (Flat & Fixed)
+       2. Header & Glass Navigation
        ========================================================================== */
     .header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1000;
-      background-color: var(--color-white);
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .nav-container {
-      max-width: 1140px;
-      margin: 0 auto;
-      padding: 16px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 40px;
     }
 
     .logo {
-      font-size: 1.35rem;
+      font-size: 1.5rem;
       font-weight: 800;
-      color: var(--text-main);
+      color: #fff;
       text-decoration: none;
       letter-spacing: -0.02em;
     }
 
-    .logo span {
-      color: var(--primary-accent);
-    }
-
-    .nav-links {
+    .nav-pill-menu {
       display: flex;
-      gap: 32px;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 5px;
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    .nav-links a {
+    .nav-pill-menu a {
       color: var(--text-muted);
       text-decoration: none;
+      padding: 8px 20px;
+      border-radius: 50px;
       font-weight: 500;
-      font-size: 0.95rem;
-      transition: color 0.15s ease;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
     }
 
-    .nav-links a:hover {
-      color: var(--text-main);
+    .nav-pill-menu a:hover,
+    .nav-pill-menu a.active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: var(--glass-inset-shadow);
     }
 
     /* ==========================================================================
-       4. Buttons (Solid & Flat)
+       3. Glossy 3D Buttons & Pills (Matching blue "Out for Lunch" button style)
        ========================================================================== */
     .btn {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
-      padding: 12px 24px;
-      border-radius: 8px;
+      padding: 12px 28px;
+      border-radius: 50px; /* Fully rounded capsules */
       font-weight: 600;
       font-size: 0.95rem;
       text-decoration: none;
-      transition: all 0.15s ease-in-out;
+      transition: all 0.2s ease;
       cursor: pointer;
+      border: 1px solid transparent;
     }
 
-    .btn-primary {
-      background-color: var(--text-main);
-      color: var(--color-white);
-      border: 1px solid var(--text-main);
+    .btn-blue {
+      background: linear-gradient(180deg, #0a84ff 0%, #0066cc 100%);
+      color: #ffffff;
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 15px rgba(10, 132, 255, 0.4), var(--glass-inset-shadow);
     }
 
-    .btn-primary:hover {
-      background-color: #1e293b;
-      border-color: #1e293b;
+    .btn-blue:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(10, 132, 255, 0.6), var(--glass-inset-shadow);
     }
 
-    .btn-secondary {
-      background-color: var(--color-white);
-      color: var(--text-main);
-      border: 1px solid var(--border-color);
+    .btn-glass {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-inset-shadow);
     }
 
-    .btn-secondary:hover {
-      background-color: var(--color-bg-subtle);
+    .btn-glass:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
     }
 
     /* ==========================================================================
-       5. Hero Section (Flat Grid Background)
+       4. Hero Section
        ========================================================================== */
     .hero {
-      padding: 180px 0 100px 0;
-      background-color: var(--color-white);
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .hero-content {
-      max-width: 800px;
-      margin: 0 auto;
+      padding: 40px 20px 60px 20px;
       text-align: center;
     }
 
-    .badge-tag {
+    .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 14px;
-      background-color: var(--color-bg-subtle);
-      border: 1px solid var(--border-color);
+      padding: 6px 16px;
       border-radius: 50px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-inset-shadow);
       font-size: 0.85rem;
-      font-weight: 600;
       color: var(--text-muted);
       margin-bottom: 24px;
     }
 
     .badge-dot {
-      width: 6px;
-      height: 6px;
-      background-color: var(--primary-accent);
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-blue);
       border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-blue);
     }
 
     .hero h1 {
-      font-size: 3.75rem;
+      font-size: 3.5rem;
       font-weight: 800;
-      line-height: 1.1;
-      color: var(--text-main);
-      margin-bottom: 20px;
       letter-spacing: -0.03em;
+      margin-bottom: 16px;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     }
 
     .hero p {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       color: var(--text-muted);
-      margin-bottom: 36px;
+      max-width: 650px;
+      margin: 0 auto 36px auto;
     }
 
-    .hero-buttons {
+    .hero-actions {
       display: flex;
       justify-content: center;
       gap: 16px;
     }
 
     /* ==========================================================================
-       6. Platform Section (Clean Flat Cards)
+       5. Platform Grid (3D Glass Cards matching Reference Dashboard)
        ========================================================================== */
-    .platform-section {
-      background-color: var(--color-bg-subtle);
-      border-bottom: 1px solid var(--border-color);
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 40px 0 24px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .grid {
@@ -241,238 +233,274 @@
       gap: 24px;
     }
 
-    .card {
-      background-color: var(--color-white);
-      border: 1px solid var(--border-color);
-      border-radius: var(--border-radius);
-      padding: 32px;
-      box-shadow: var(--shadow-flat);
-      transition: all 0.2s ease;
+    /* Glossy 3D Glass Widget Card */
+    .glass-card {
+      background: var(--glass-card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--card-3d-shadow), var(--glass-inset-shadow);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
     }
 
-    .card:hover {
-      box-shadow: var(--shadow-hover);
-      border-color: #cbd5e1;
-      transform: translateY(-2px);
+    .glass-card:hover {
+      background: var(--glass-card-hover);
+      border-color: var(--glass-border-light);
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), var(--glass-inset-shadow);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
     }
 
     .card-icon {
       width: 44px;
       height: 44px;
-      border-radius: 8px;
-      background-color: var(--color-bg-subtle);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: var(--glass-inset-shadow);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
-      margin-bottom: 20px;
+      font-size: 1.2rem;
+      color: #fff;
     }
 
-    .card h3 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 8px;
-    }
-
-    .card p {
-      font-size: 0.95rem;
+    .card-arrow {
       color: var(--text-muted);
-    }
-
-    /* ==========================================================================
-       7. About & Vision Sections
-       ========================================================================== */
-    .about-box {
-      background-color: var(--color-white);
-      border: 1px solid var(--border-color);
-      border-radius: var(--border-radius);
-      padding: 48px;
-      max-width: 800px;
-      margin: 0 auto;
-      text-align: center;
-      box-shadow: var(--shadow-flat);
-    }
-
-    .about-box p {
-      font-size: 1.15rem;
-      line-height: 1.8;
-      color: var(--text-main);
-    }
-
-    .vision-card {
-      background-color: var(--text-main);
-      color: var(--color-white);
-      border-radius: var(--border-radius);
-      padding: 64px 40px;
-      text-align: center;
-    }
-
-    .vision-card h2 {
-      font-size: 2.25rem;
-      font-weight: 800;
-      margin-bottom: 16px;
-      letter-spacing: -0.02em;
-    }
-
-    .vision-card p {
-      color: #94a3b8;
-      font-size: 1.15rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    /* ==========================================================================
-       8. Footer
-       ========================================================================== */
-    footer {
-      padding: 40px 0;
-      background-color: var(--color-white);
-      border-top: 1px solid var(--border-color);
       font-size: 0.9rem;
     }
 
-    .footer-container {
+    .glass-card h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .glass-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Glossy Progress Bar Style from reference */
+    .progress-bar-container {
+      margin-top: 20px;
+      background: rgba(0, 0, 0, 0.3);
+      height: 8px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0a84ff, #30d158);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(10, 132, 255, 0.5);
+    }
+
+    /* ==========================================================================
+       6. Vision & About Section
+       ========================================================================== */
+    .vision-box {
+      margin-top: 48px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: var(--card-3d-shadow), var(--glass-inset-shadow);
+    }
+
+    .vision-box h2 {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    /* ==========================================================================
+       7. Footer
+       ========================================================================== */
+    footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
     }
 
-    .footer-links {
-      display: flex;
-      gap: 24px;
-    }
-
-    .footer-links a {
+    footer a {
       color: var(--text-muted);
       text-decoration: none;
+      margin-left: 20px;
     }
 
-    .footer-links a:hover {
-      color: var(--text-main);
+    footer a:hover {
+      color: #fff;
     }
 
-    /* Mobile Responsive */
     @media (max-width: 768px) {
+      .app-container { margin: 10px; padding: 20px; border-radius: 20px; }
       .hero h1 { font-size: 2.5rem; }
-      .nav-links { display: none; }
-      .footer-container { flex-direction: column; gap: 16px; text-align: center; }
+      .nav-pill-menu { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Header Navigation -->
-  <header class="header">
-    <div class="nav-container">
-      <a href="#" class="logo">Pi<span>Genesis</span></a>
-      <nav class="nav-links">
+  <!-- Main Floating VisionOS Glass Window -->
+  <div class="app-container">
+    
+    <!-- Header -->
+    <header class="header">
+      <a href="#" class="logo">PiGenesis</a>
+      
+      <nav class="nav-pill-menu">
         <a href="#about">About</a>
-        <a href="#platform">Platform</a>
+        <a href="#platform" class="active">Platform</a>
         <a href="#vision">Vision</a>
       </nav>
-      <a href="#platform" class="btn btn-primary">Explore Platform</a>
-    </div>
-  </header>
 
-  <main>
-    <!-- Hero Section -->
+      <a href="#platform" class="btn btn-blue">Explore</a>
+    </header>
+
+    <!-- Hero -->
     <section class="hero">
-      <div class="container">
-        <div class="hero-content">
-          <div class="badge-tag">
-            <span class="badge-dot"></span> Enterprise System Architecture
-          </div>
-          <h1>Engineering Intelligent Systems</h1>
-          <p>Building intelligent platforms that bring structure, order, and automation to complex enterprise workflows.</p>
-          <div class="hero-buttons">
-            <a class="btn btn-primary" href="#platform">Explore Platform <i class="fa-solid fa-arrow-right"></i></a>
-            <a class="btn btn-secondary" href="#about">Who We Are</a>
-          </div>
-        </div>
+      <div class="hero-badge">
+        <span class="badge-dot"></span> Next-Gen Intelligent Platforms
+      </div>
+      <h1>Engineering Intelligent Systems</h1>
+      <p>Building intelligent platforms that bring order, structure, and clarity to complex workflows.</p>
+      
+      <div class="hero-buttons">
+        <a href="#platform" class="btn btn-blue">Explore PiGenesis</a>
+        <a href="#about" class="btn btn-glass">Learn More</a>
       </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="section">
-      <div class="container">
-        <div class="section-title text-center">Who We Are</div>
-        <p class="section-subtitle text-center">Driven by precision and engineering-first principles.</p>
-        <div class="about-box">
-          <p><strong>PiGenesis</strong> is an engineering-first technology company building intelligent systems and workflow platforms designed to manage scale and reduce operational complexity.</p>
-        </div>
+    <section id="about">
+      <div class="section-title">
+        <i class="fa-solid fa-layer-group"></i> Who We Are
+      </div>
+      <div class="glass-card">
+        <p style="font-size: 1.1rem; color: #e5e7eb; line-height: 1.8;">
+          <strong>PiGenesis</strong> is an engineering-first technology company dedicated to building intelligent systems and workflow platforms designed for enterprise efficiency.
+        </p>
       </div>
     </section>
 
-    <!-- Platform Section -->
-    <section id="platform" class="section platform-section">
-      <div class="container">
-        <h2 class="section-title text-center">Our Platform</h2>
-        <p class="section-subtitle text-center">Interconnected modules designed for total system orchestration.</p>
+    <!-- Platform Section (Styled like image cards) -->
+    <section id="platform">
+      <div class="section-title">
+        <i class="fa-solid fa-cube"></i> Our Platform
+      </div>
 
-        <div class="grid">
-          <div class="card">
+      <div class="grid">
+        <div class="glass-card">
+          <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-diagram-project"></i></div>
-            <h3>PI Flow</h3>
-            <p>Automate intricate workflow pipelines with continuous system logic.</p>
+            <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
           </div>
-
-          <div class="card">
-            <div class="card-icon"><i class="fa-solid fa-file-lines"></i></div>
-            <h3>PI Docs</h3>
-            <p>Smart document synthesis, indexing, and structured data handling.</p>
+          <h3>PI Flow</h3>
+          <p>Automates complex data pipelines and continuous system workflow logic.</p>
+          <div class="progress-bar-container">
+            <div class="progress-fill" style="width: 85%;"></div>
           </div>
+        </div>
 
-          <div class="card">
-            <div class="card-icon"><i class="fa-solid fa-microchip"></i></div>
-            <h3>PI AI</h3>
-            <p>Context-aware artificial intelligence tuned specifically for workflow systems.</p>
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-icon"><i class="fa-solid fa-file-contract"></i></div>
+            <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
           </div>
+          <h3>PI Docs</h3>
+          <p>Intelligent document synthesis, extraction, and real-time structured indexing.</p>
+          <div class="progress-bar-container">
+            <div class="progress-fill" style="width: 65%;"></div>
+          </div>
+        </div>
 
-          <div class="card">
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-icon"><i class="fa-solid fa-brain"></i></div>
+            <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+          </div>
+          <h3>PI AI</h3>
+          <p>Context-aware artificial intelligence tuned specifically for workflow decision execution.</p>
+          <div class="progress-bar-container">
+            <div class="progress-fill" style="width: 95%;"></div>
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-vault"></i></div>
-            <h3>PI Vault</h3>
-            <p>Cryptographic data protection layer for high-security enterprise environments.</p>
+            <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
           </div>
+          <h3>PI Vault</h3>
+          <p>Zero-trust cryptographic data protection layer for secure environments.</p>
+          <div class="progress-bar-container">
+            <div class="progress-fill" style="width: 40%;"></div>
+          </div>
+        </div>
 
-          <div class="card">
+        <div class="glass-card">
+          <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-chart-line"></i></div>
-            <h3>PI Insight</h3>
-            <p>Real-time system telemetry and predictive analytics built into one view.</p>
+            <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
           </div>
+          <h3>PI Insight</h3>
+          <p>Real-time predictive analytics and system telemetry transformed into actionable metrics.</p>
+          <div class="progress-bar-container">
+            <div class="progress-fill" style="width: 75%;"></div>
+          </div>
+        </div>
 
-          <div class="card">
-            <div class="card-icon"><i class="fa-solid fa-cubes"></i></div>
-            <h3>More Integrations</h3>
-            <p>Scalable APIs tailored to integrate directly with your existing infrastructure.</p>
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-icon"><i class="fa-solid fa-ellipsis"></i></div>
+            <i class="fa-solid fa-arrow-up-right-from-square card-arrow"></i>
+          </div>
+          <h3>More Modules</h3>
+          <p>Custom APIs engineered to integrate directly with existing tech stacks.</p>
+          <div class="progress-bar-container">
+            <div class="progress-fill" style="width: 50%;"></div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Vision Section -->
-    <section id="vision" class="section">
-      <div class="container">
-        <div class="vision-card">
-          <h2>Creating Order Through Intelligent Systems</h2>
-          <p>Transforming complex organizational workflows into structured, automated, and reliable digital operations.</p>
-        </div>
+    <section id="vision">
+      <div class="vision-box">
+        <h2>Creating Order Through Intelligent Systems</h2>
+        <p style="color: var(--text-muted);">Transforming enterprise complexity into structured, automated digital workflows.</p>
       </div>
     </section>
-  </main>
 
-  <!-- Footer -->
-  <footer>
-    <div class="container footer-container">
-      <p>© 2026 <strong>PiGenesis</strong>. All rights reserved.</p>
-      <div class="footer-links">
+    <!-- Footer -->
+    <footer>
+      <div>© 2026 PiGenesis. All rights reserved.</div>
+      <div>
         <a href="#">Privacy Policy</a>
         <a href="#">Terms of Service</a>
       </div>
-    </div>
-  </footer>
+    </footer>
+
+  </div>
 
 </body>
 </html>
