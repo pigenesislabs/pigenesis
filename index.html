@@ -371,57 +371,44 @@
   <!-- SVG Logo Icon -->
   <svg width="44" height="44" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <!-- Logo Ring Gradient: Neon Cyan (#00d2ff) to Deep Neon Purple (#9d4edd) -->
+      <!-- Logo Ring Gradient: Neon Cyan to Neon Purple -->
       <linearGradient id="logoRingGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
         <stop offset="0%" stop-color="#00d2ff" />
         <stop offset="100%" stop-color="#9d4edd" />
       </linearGradient>
 
-      <!-- Neon Glow Filter for SVG -->
-      <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
-        <feGaussianBlur stdDeviation="3" result="blur" />
+      <!-- Soft Ring Glow Filter -->
+      <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="2" result="blur" />
         <feComposite in="SourceGraphic" in2="blur" operator="over" />
       </filter>
     </defs>
 
-    <!-- Outer Gradient Ring with Glow -->
+    <!-- Outer Gradient Ring -->
     <circle cx="50" cy="50" r="42" stroke="url(#logoRingGrad)" stroke-width="4" fill="rgba(0,0,0,0.4)" filter="url(#neonGlow)" />
 
     <!-- Stylized Pi Monogram Symbol in Center -->
     <g filter="url(#neonGlow)">
-      <!-- Top Horizontal Pi Bar -->
       <path d="M 36 34 H 64" stroke="#e0c3fc" stroke-width="6" stroke-linecap="square" />
-      
-      <!-- Left Leg (P Stem) -->
       <path d="M 42 34 V 68" stroke="#e0c3fc" stroke-width="6" stroke-linecap="square" />
-      
-      <!-- Right Leg / P-Loop Connection -->
       <path d="M 56 34 V 52 H 42" stroke="#e0c3fc" stroke-width="6" stroke-linecap="square" fill="none" />
     </g>
   </svg>
 
-  <!-- Typography Block with REAL Neon Light Glow -->
+  <!-- Typography Block with Subtle, Tighter Glow -->
   <div style="display: flex; flex-direction: column; text-align: left;">
     <span style="font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1;">
       
-      <!-- "Pi" in Neon Cyan Glow -->
+      <!-- "Pi" - Crisp Cyan with Soft 6px Glow -->
       <span style="
-        color: #e0f7fc; 
-        text-shadow: 
-          0 0 4px #00d2ff, 
-          0 0 10px #00d2ff, 
-          0 0 18px rgba(0, 210, 255, 0.8), 
-          0 0 30px rgba(0, 210, 255, 0.4);
+        color: #00d2ff; 
+        text-shadow: 0 0 8px rgba(0, 210, 255, 0.5), 0 0 14px rgba(0, 210, 255, 0.25);
       ">Pi</span><!--
 
-      --><!-- "Genesis" in Neon Purple Glow -->
+      --><!-- "Genesis" - Crisp Purple with Soft 6px Glow -->
       <span style="
-        color: #f3e8ff; 
-        text-shadow: 
-          0 0 4px #b15eff, 
-          0 0 10px #9d4edd, 
-          0 0 18px rgba(157, 78, 221, 0.8), 
-          0 0 30px rgba(157, 78, 221, 0.4);
+        color: #b15eff; 
+        text-shadow: 0 0 8px rgba(177, 94, 255, 0.5), 0 0 14px rgba(177, 94, 255, 0.25);
       ">Genesis</span>
 
     </span>
