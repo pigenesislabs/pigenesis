@@ -3,135 +3,534 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PiGenesis | Engineering Intelligent Systems</title>
+  <title>AIFusionx | AI Agency, Automation & SaaS Systems</title>
   
-  <!-- Modern Font: Inter -->
+  <!-- Modern Font: Inter (from Google Fonts) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Icons -->
+  <!-- Icons (Font Awesome) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ==========================================================================
+       1. Global Variables & Reset (Replicating Reference Aesthetic)
+       ========================================================================== */
+    :root {
+      /* Colors from reference image */
+      --color-white: #ffffff;
+      --color-primary: #8a63f2; /* Vibrant Purple from reference */
+      --color-accent: #ff4d00;  /* Bright Orange from "NEW" badge */
+      --text-main: #111827;     /* Dark Charcoal for main text */
+      --text-muted: #6b7280;    /* Soft Gray for subtitles */
+      --bg-light: #f9fafb;      /* Very Light Gray for alternating sections */
+      
+      /* UI System */
+      --border-radius-card: 16px;
+      --font-stack: 'Inter', system-ui, -apple-system, sans-serif;
+      --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      --transition-main: all 0.25s ease-in-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      color-scheme: light; /* Force light mode to match reference */
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--color-white);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ==========================================================================
+       2. Reusable Typography & Utilities
+       ========================================================================== */
+    h1, h2, h3, h4 {
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      color: var(--text-muted);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section {
+      padding: 112px 0;
+    }
+
+    .text-center { text-align: center; }
+
+    /* For light-to-purple gradient text in section headings */
+    .section-title {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+    
+    .section-title strong {
+      background: linear-gradient(135deg, var(--text-main) 0%, var(--color-primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .section-subtitle {
+      font-size: 1.25rem;
+      max-width: 700px;
+      margin: 0 auto 64px auto;
+    }
+
+    /* ==========================================================================
+       3. Buttons & Interactive Elements (Clean & Structured)
+       ========================================================================== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border-radius: 50px; /* Fully rounded buttons from reference */
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition-main);
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background-color: var(--color-primary);
+      color: var(--color-white);
+    }
+
+    .btn-primary:hover {
+      background-color: #724ae8; /* Darker purple on hover */
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: var(--text-main);
+      border-color: #e5e7eb;
+    }
+
+    .btn-outline:hover {
+      background-color: rgba(0, 0, 0, 0.03);
+      border-color: #d1d5db;
+    }
+
+    /* Reference Badges */
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      background-color: rgba(138, 99, 242, 0.1);
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--color-primary);
+      border-radius: 50%;
+    }
+
+    /* ==========================================================================
+       4. Navigation Bar
+       ========================================================================== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-main);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .logo-icon {
+      color: var(--color-primary);
+      font-size: 1.2rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--color-primary);
+    }
+
+    /* ==========================================================================
+       5. Hero Section (Replicating structured text & layout)
+       ========================================================================== */
+    .hero {
+      position: relative;
+      background-color: var(--color-white);
+      padding: 180px 0 120px 0;
+      display: flex;
+      justify-content: center;
+      text-align: center;
+    }
+    
+    /* Background grid effect (matching texture from image) */
+    .hero-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(#e5e7eb 1px, transparent 1px),
+        linear-gradient(90deg, #e5e7eb 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.03;
+      z-index: 1;
+    }
+
+    .hero-content {
+      max-width: 850px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero h1 {
+      font-size: 4.5rem;
+      line-height: 1.05;
+      margin-bottom: 24px;
+      color: var(--text-main);
+    }
+    
+    .hero h1 strong {
+      font-weight: 800;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      margin-bottom: 48px;
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    /* ==========================================================================
+       6. Product Grid (Workflow Cards from reference)
+       ========================================================================== */
+    .workflow-section {
+      background-color: var(--bg-light);
+    }
+
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 32px;
+    }
+
+    .wf-card {
+      background-color: var(--color-white);
+      border-radius: var(--border-radius-card);
+      padding: 40px;
+      border: 1px solid #e5e7eb;
+      transition: var(--transition-main);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wf-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
+      border-color: var(--color-primary);
+    }
+    
+    /* Subtle decorative light ray matching image texture */
+    .wf-card::after {
+      content: '';
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(138, 99, 242, 0.1) 0%, transparent 60%);
+      border-radius: 50%;
+    }
+
+    .wf-icon-box {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      background-color: rgba(138, 99, 242, 0.08);
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      margin-bottom: 24px;
+    }
+
+    .wf-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+
+    .wf-card p {
+      font-size: 1rem;
+      margin-bottom: 24px;
+    }
+
+    .wf-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: var(--color-primary);
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+    
+    .wf-link:hover i {
+      transform: translateX(3px);
+    }
+    
+    .wf-link i {
+      transition: transform 0.2s ease;
+    }
+
+    /* ==========================================================================
+       7. Clients / Trust Section (As seen in image bottom-right)
+       ========================================================================== */
+    .trust-section {
+      background-color: var(--color-white);
+      padding: 64px 0 112px 0;
+    }
+    
+    .client-heading {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+    }
+
+    .client-logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+
+    .client-logo {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #cbd5e1; /* Faded charcoal for logos */
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      filter: grayscale(1);
+      opacity: 0.8;
+    }
+
+    /* ==========================================================================
+       8. Footer
+       ========================================================================== */
+    .footer {
+      padding: 64px 0;
+      background-color: var(--bg-light);
+      border-top: 1px solid #e5e7eb;
+      font-size: 0.95rem;
+    }
+
+    .footer-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer p {
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      color: var(--color-primary);
+    }
+
+    /* ==========================================================================
+       9. Responsive Adjustments
+       ========================================================================== */
+    @media (max-width: 992px) {
+      .hero h1 { font-size: 3.5rem; }
+      .section-title { font-size: 2.5rem; }
+    }
+
+    @media (max-width: 768px) {
+      .hero { padding: 140px 0 80px 0; }
+      .hero h1 { font-size: 2.8rem; }
+      .section { padding: 80px 0; }
+      .nav-links { display: none; } /* Mobile Menu Placeholder */
+      .workflow-grid { grid-template-columns: 1fr; }
+      .footer-container { flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Sticky Glass Navigation -->
-  <header class="navbar">
+  <!-- 1. Navigation Bar (Structured Layout) -->
+  <header class="header">
     <div class="nav-container">
       <a href="#" class="logo">
-        <span class="logo-accent">Pi</span>Genesis
+        <i class="fa-solid fa-cloud-bolt logo-icon"></i> AIFusionx
       </a>
       <nav class="nav-links">
-        <a href="#about">About</a>
-        <a href="#platform">Platform</a>
-        <a href="#vision">Vision</a>
+        <a href="#hero" class="active">Home</a>
+        <a href="#workflows">Platform</a>
+        <a href="#about">About Us</a>
+        <a href="#trust">Clients</a>
       </nav>
-      <a href="#platform" class="btn btn-sm">Get Started</a>
+      <a href="#workflows" class="btn btn-primary">Start Building</a>
     </div>
   </header>
 
-  <main>
-    <!-- Hero Section -->
-    <section class="hero">
-      <div class="hero-content">
-        <div class="badge">
-          <span class="badge-dot"></span> Next-Gen Enterprise Automation
+  <!-- 2. Hero Section (Replicating structured text & layout) -->
+  <section id="hero" class="hero">
+    <div class="hero-bg"></div>
+    <div class="container hero-content">
+      <div class="badge-status">
+        <span class="status-dot"></span> Next-Gen Automation Platform
+      </div>
+      <h1>Automate critical workflows. <strong>Integrate the tools you rely on.</strong></h1>
+      <p>Building intuitive platforms that bring structure, logic, and AI-driven automation to complex organizational workflows.</p>
+      <div class="hero-buttons">
+        <a class="btn btn-primary" href="#workflows">Explore AIFusionx</a>
+        <a class="btn btn-outline" href="#trust">Trusted Partners</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Workflow Section (Product Grid replicating structured cards) -->
+  <section id="workflows" class="section workflow-section">
+    <div class="container">
+      <div class="section-header text-center">
+        <h2 class="section-title"><strong>Engineered</strong> for Real Workflows</h2>
+        <p class="section-subtitle">Interconnected enterprise tools built for total operational efficiency and intelligent decision-making.</p>
+      </div>
+
+      <div class="workflow-grid">
+        <!-- Card 1 -->
+        <div class="wf-card">
+          <div class="wf-icon-box"><i class="fa-solid fa-diagram-next"></i></div>
+          <h3>AI FlowX</h3>
+          <p>Automate intricate workflow pipelines with integrated generative AI and adaptive continuous logic execution.</p>
+          <a href="#" class="wf-link">Learn More <i class="fa-solid fa-arrow-right"></i></a>
         </div>
-        <h1>Engineering <span class="gradient-text">Intelligent Systems</span></h1>
-        <p class="hero-subtext">Building high-performance platforms designed to bring structure, clarity, and automation to complex workflows.</p>
-        <div class="hero-buttons">
-          <a class="btn btn-primary" href="#platform">Explore Platform <i class="fa-solid fa-arrow-right"></i></a>
-          <a class="btn btn-secondary" href="#about">Learn More</a>
+
+        <!-- Card 2 (Featured Card from reference) -->
+        <div class="wf-card featured-wf-card">
+          <div class="wf-icon-box"><i class="fa-solid fa-brain"></i></div>
+          <h3>AI Core</h3>
+          <p>The centralized cognitive layer providing context-aware AI tuned for high-throughput enterprise decision systems.</p>
+          <a href="#" class="wf-link">Learn More <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="wf-card">
+          <div class="wf-icon-box"><i class="fa-solid fa-chart-simple"></i></div>
+          <h3>AI Insights</h3>
+          <p>Predictive analytics and comprehensive system telemetry transformed into actionable, simple business metrics.</p>
+          <a href="#" class="wf-link">Learn More <i class="fa-solid fa-arrow-right"></i></a>
         </div>
       </div>
-      <!-- Background Decorative Light Glow -->
-      <div class="hero-glow"></div>
-    </section>
+    </div>
+  </section>
 
-    <!-- About Section -->
-    <section id="about" class="section">
-      <div class="container">
-        <div class="section-header text-center">
-          <h2>Who We Are</h2>
-          <p class="subtitle">An engineering-first technology company dedicated to solving complexity.</p>
-        </div>
-        <div class="about-card">
-          <p>At <strong>PiGenesis</strong>, we architect resilient, scalable digital systems. By combining enterprise intelligence with seamless user experiences, we build workflow platforms that empower organizations to make smarter decisions and operate effortlessly.</p>
-        </div>
+  <!-- 4. Client / Trust Section (Logo Row replicated) -->
+  <section id="trust" class="section trust-section">
+    <div class="container text-center">
+      <h4 class="client-heading">Integrated with leading enterprise platforms</h4>
+      <div class="client-logos">
+        <span class="client-logo">Linear</span>
+        <span class="client-logo">Framer</span>
+        <span class="client-logo">Notion</span>
+        <span class="client-logo">Figma</span>
+        <span class="client-logo">Zapier</span>
+        <span class="client-logo">Slack</span>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Platform Section -->
-    <section id="platform" class="section alt-bg">
-      <div class="container">
-        <div class="section-header text-center">
-          <h2>Our Platform Ecosystem</h2>
-          <p class="subtitle">Interconnected tools engineered for total operational efficiency.</p>
-        </div>
-
-        <div class="grid">
-          <div class="card">
-            <div class="card-icon"><i class="fa-solid fa-diagram-project"></i></div>
-            <h3>PI Flow</h3>
-            <p>Automate intricate workflow pipelines with continuous logic execution.</p>
-          </div>
-
-          <div class="card">
-            <div class="card-icon"><i class="fa-solid fa-file-contract"></i></div>
-            <h3>PI Docs</h3>
-            <p>Smart document synthesis, extraction, and real-time structured indexing.</p>
-          </div>
-
-          <div class="card card-featured">
-            <div class="card-icon"><i class="fa-solid fa-brain"></i></div>
-            <h3>PI AI</h3>
-            <p>Context-aware artificial intelligence tuned specifically for high-throughput decision systems.</p>
-          </div>
-
-          <div class="card">
-            <div class="card-icon"><i class="fa-solid fa-shield-halved"></i></div>
-            <h3>PI Vault</h3>
-            <p>Zero-trust cryptographic data protection and regulatory compliance layer.</p>
-          </div>
-
-          <div class="card">
-            <div class="card-icon"><i class="fa-solid fa-chart-line"></i></div>
-            <h3>PI Insight</h3>
-            <p>Predictive analytics and system telemetry transformed into actionable metrics.</p>
-          </div>
-
-          <div class="card card-more">
-            <div class="card-icon"><i class="fa-solid fa-cubes"></i></div>
-            <h3>And More...</h3>
-            <p>Custom enterprise integrations built to fit your unique tech stack.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Vision Section -->
-    <section id="vision" class="section">
-      <div class="container">
-        <div class="vision-banner">
-          <h2>Creating Order Through Intelligent Systems</h2>
-          <p>We envision a future where digital infrastructure operates seamlessly in the background, transforming chaos into clarity.</p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <div class="footer-container">
-      <p>© 2026 <strong>PiGenesis</strong>. All rights reserved.</p>
+  <!-- 5. Footer -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <p>© 2026 <strong>AIFusionx Agency</strong>. Modern engineering for intelligent systems.</p>
       <div class="footer-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
       </div>
     </div>
   </footer>
 
-  <script src="script.js"></script>
 </body>
 </html>
