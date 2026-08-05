@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Global Variables & Reset
+   1. Global Variables & Reset
    ========================================================================== */
 :root {
   --bg-dark: #0b0f19;
@@ -34,7 +34,7 @@ body {
 }
 
 /* ==========================================================================
-   Typography & Reusable Utilities
+   2. Typography & Reusable Utilities
    ========================================================================== */
 h1, h2, h3 {
   color: #ffffff;
@@ -52,7 +52,9 @@ p {
   -webkit-text-fill-color: transparent;
 }
 
-.text-center { text-align: center; }
+.text-center { 
+  text-align: center; 
+}
 
 .container {
   max-width: 1140px;
@@ -78,7 +80,7 @@ p {
 }
 
 /* ==========================================================================
-   Navigation
+   3. Sticky Glass Navigation
    ========================================================================== */
 .navbar {
   position: fixed;
@@ -89,6 +91,13 @@ p {
   background: rgba(11, 15, 25, 0.8);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-bottom-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar.scrolled {
+  background: rgba(11, 15, 25, 0.95);
+  border-bottom-color: rgba(16, 185, 129, 0.2);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
 }
 
 .nav-container {
@@ -129,7 +138,7 @@ p {
 }
 
 /* ==========================================================================
-   Buttons
+   4. Buttons
    ========================================================================== */
 .btn {
   display: inline-flex;
@@ -142,12 +151,31 @@ p {
   text-decoration: none;
   transition: all 0.25s ease;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-primary {
   background-color: var(--primary);
   color: #000;
   box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.btn-primary:hover::after {
+  opacity: 1;
 }
 
 .btn-primary:hover {
@@ -181,7 +209,7 @@ p {
 }
 
 /* ==========================================================================
-   Hero Section
+   5. Hero Section
    ========================================================================== */
 .hero {
   position: relative;
@@ -214,7 +242,19 @@ p {
   height: 6px;
   background-color: var(--primary);
   border-radius: 50%;
-  box-shadow: 0 0 8px var(--primary);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
 }
 
 .hero h1 {
@@ -248,7 +288,7 @@ p {
 }
 
 /* ==========================================================================
-   About Section
+   6. About Section
    ========================================================================== */
 .about-card {
   background: var(--bg-card);
@@ -267,7 +307,7 @@ p {
 }
 
 /* ==========================================================================
-   Platform Section & Grid Cards
+   7. Platform Section & Cards
    ========================================================================== */
 .alt-bg {
   background-color: rgba(255, 255, 255, 0.015);
@@ -323,7 +363,7 @@ p {
 }
 
 /* ==========================================================================
-   Vision Section
+   8. Vision Section
    ========================================================================== */
 .vision-banner {
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
@@ -346,7 +386,7 @@ p {
 }
 
 /* ==========================================================================
-   Footer
+   9. Footer
    ========================================================================== */
 footer {
   padding: 40px 0;
@@ -377,9 +417,19 @@ footer {
   color: var(--primary);
 }
 
-/* Responsive adjustments */
+/* ==========================================================================
+   10. Responsive Tweaks
+   ========================================================================== */
 @media (max-width: 768px) {
-  .hero h1 { font-size: 2.4rem; }
-  .nav-links { display: none; }
-  .footer-container { flex-direction: column; gap: 16px; text-align: center; }
+  .hero h1 { 
+    font-size: 2.4rem; 
+  }
+  .nav-links { 
+    display: none; 
+  }
+  .footer-container { 
+    flex-direction: column; 
+    gap: 16px; 
+    text-align: center; 
+  }
 }
