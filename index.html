@@ -367,39 +367,53 @@
 <header class="header">
   
   <!-- PASTE NEW LOGO HERE -->
-  <a href="#" class="logo" style="display: inline-flex; align-items: center; gap: 12px; text-decoration: none;">
-    <!-- SVG Logo Symbol -->
-    <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="piGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#0a84ff" />
-          <stop offset="100%" stop-color="#30d158" />
-        </linearGradient>
-        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="3" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
-      </defs>
+  <a href="#" class="logo" style="display: inline-flex; align-items: center; gap: 14px; text-decoration: none;">
+  <!-- SVG Logo matching your image -->
+  <svg width="44" height="44" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Neon Cyan to Purple Gradient -->
+      <linearGradient id="ringGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#00d2ff" />
+        <stop offset="50%" stop-color="#9d4edd" />
+        <stop offset="100%" stop-color="#6a0ded" />
+      </linearGradient>
 
-      <rect x="2" y="2" width="36" height="36" rx="10" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1.5" />
-      <path d="M 10 14 H 30" stroke="url(#piGrad)" stroke-width="3.5" stroke-linecap="round" filter="url(#glow)"/>
-      <path d="M 15 14 V 26" stroke="url(#piGrad)" stroke-width="3" stroke-linecap="round"/>
-      <path d="M 25 14 V 24 C 25 27, 28 27, 29 25" stroke="url(#piGrad)" stroke-width="3" stroke-linecap="round"/>
-      <circle cx="10" cy="14" r="2.5" fill="#ffffff" />
-      <circle cx="30" cy="14" r="2.5" fill="#ffffff" />
-      <circle cx="15" cy="26" r="2" fill="#30d158" />
-    </svg>
+      <!-- Glow Effect -->
+      <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="2.5" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+    </defs>
 
-    <!-- Logo Text & Slogan Subtitle -->
-    <div style="display: flex; flex-direction: column; text-align: left;">
-      <span style="font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.25rem; color: #ffffff; letter-spacing: -0.02em; line-height: 1;">
-        Pi<span style="color: #0a84ff;">Genesis</span>
-      </span>
-      <span style="font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.58rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 3px;">
-        Engineering Intelligent Systems
-      </span>
-    </div>
-  </a>
+    <!-- Outer Gradient Ring -->
+    <circle cx="50" cy="50" r="42" stroke="url(#ringGrad)" stroke-width="3" fill="rgba(0,0,0,0.3)" filter="url(#neonGlow)" />
+    
+    <!-- Secondary Outer Ring Accent Line -->
+    <path d="M 12 50 A 38 38 0 0 1 88 50" stroke="url(#ringGrad)" stroke-width="1.5" stroke-dasharray="60 30" opacity="0.6" />
+
+    <!-- Stylized Pi/P Monogram Symbol in Center -->
+    <g filter="url(#neonGlow)">
+      <!-- Top Horizontal Pi Bar -->
+      <path d="M 36 34 H 64" stroke="#c8b6ff" stroke-width="5" stroke-linecap="square" />
+      
+      <!-- Left Leg (P Stem) -->
+      <path d="M 42 34 V 68" stroke="#c8b6ff" stroke-width="5" stroke-linecap="square" />
+      
+      <!-- Right Leg / P-Loop Connection -->
+      <path d="M 56 34 V 52 H 42" stroke="#c8b6ff" stroke-width="5" stroke-linecap="square" fill="none" />
+    </g>
+  </svg>
+
+  <!-- Typography Block -->
+  <div style="display: flex; flex-direction: column; text-align: left;">
+    <span style="font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.3rem; color: #ffffff; letter-spacing: -0.02em; line-height: 1;">
+      Pi<span style="color: #00d2ff;">Genesis</span>
+    </span>
+    <span style="font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.58rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px;">
+      Engineering Intelligent Systems
+    </span>
+  </div>
+</a>
 
   <!-- Navigation Menu -->
   <nav class="nav-pill-menu">
