@@ -379,7 +379,7 @@
 
       <!-- Soft Ring Glow Filter -->
       <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur stdDeviation="2" result="blur" />
+        <feGaussianBlur stdDeviation="2.5" result="blur" />
         <feComposite in="SourceGraphic" in2="blur" operator="over" />
       </filter>
     </defs>
@@ -395,20 +395,26 @@
     </g>
   </svg>
 
-  <!-- Typography Block with Subtle, Tighter Glow -->
+  <!-- Typography Block with Perfectly Balanced Glow -->
   <div style="display: flex; flex-direction: column; text-align: left;">
     <span style="font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.35rem; letter-spacing: -0.02em; line-height: 1;">
       
-      <!-- "Pi" - Crisp Cyan with Soft 6px Glow -->
+      <!-- "Pi" - Crisp Cyan with Matched Light Halo -->
       <span style="
         color: #00d2ff; 
-        text-shadow: 0 0 8px rgba(0, 210, 255, 0.5), 0 0 14px rgba(0, 210, 255, 0.25);
+        text-shadow: 
+          0 0 2px #ffffff,
+          0 0 8px #00d2ff, 
+          0 0 15px rgba(0, 210, 255, 0.6);
       ">Pi</span><!--
 
-      --><!-- "Genesis" - Crisp Purple with Soft 6px Glow -->
+      --><!-- "Genesis" - Crisp Purple with Matched Light Halo -->
       <span style="
         color: #b15eff; 
-        text-shadow: 0 0 8px rgba(177, 94, 255, 0.5), 0 0 14px rgba(177, 94, 255, 0.25);
+        text-shadow: 
+          0 0 2px #ffffff,
+          0 0 8px #9d4edd, 
+          0 0 15px rgba(157, 78, 221, 0.6);
       ">Genesis</span>
 
     </span>
