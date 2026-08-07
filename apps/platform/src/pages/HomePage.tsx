@@ -8,6 +8,7 @@ function HomePage() {
         title="PiGenesis Platform"
         subtitle="Engineering Intelligent Systems"
       />
+      
     </MainLayout>
   );
 }

@@ -1,19 +1,38 @@
-type MainLayoutProps = {
+import Header from "../components/layout/Header";
+import Sidebar from "../components/layout/Sidebar";
+
+type Props = {
   children: React.ReactNode;
 };
 
-function MainLayout({ children }: MainLayoutProps) {
+function MainLayout({ children }: Props) {
   return (
     <div
       style={{
         minHeight: "100vh",
-        background: "#0f172a",
-        color: "white",
-        padding: "40px",
-        fontFamily: "Arial",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      {children}
+      <Header />
+
+      <div
+        style={{
+          display: "flex",
+          flex: 1,
+        }}
+      >
+        <Sidebar />
+
+        <main
+          style={{
+            flex: 1,
+            padding: "30px",
+          }}
+        >
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
