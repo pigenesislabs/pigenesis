@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Header from "../components/layout/Header";
 import Sidebar from "../components/layout/Sidebar";
 
@@ -6,30 +7,19 @@ type Props = {
 };
 
 function MainLayout({ children }: Props) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <Header />
+    <div className="min-h-screen bg-slate-950 text-white">
+      <Header onMenuClick={() => setSidebarOpen(true)} />
 
-      <div
-        style={{
-          display: "flex",
-          flex: 1,
-        }}
-      >
-        <Sidebar />
+      <div className="flex">
+        <Sidebar
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
 
-        <main
-          style={{
-            flex: 1,
-            padding: "30px",
-          }}
-        >
+        <main className="min-w-0 flex-1 p-5 md:p-8 lg:p-10">
           {children}
         </main>
       </div>
