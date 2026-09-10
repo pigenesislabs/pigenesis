@@ -10,6 +10,8 @@ import SettingsPage from "../pages/SettingsPage";
 import ProjectDetailsPage from "../pages/ProjectDetailsPage";
 import ProductDetailsPage from "../pages/ProductDetailsPage";
 import ServiceDetailsPage from "../pages/ServiceDetailsPage";
+import CreateProjectPage from "../pages/CreateProjectPage";
+import EditProjectPage from "../pages/EditProjectPage";
 
 function AppRouter() {
   return (
@@ -24,6 +26,8 @@ function AppRouter() {
           <Route path="/projects/:projectId" element={<ProjectDetailsPage />} />
           <Route path="/products/:productId" element={<ProductDetailsPage />} />
           <Route path="/services/:serviceId" element={<ServiceDetailsPage />} />
+          <Route path="/projects/new" element={<CreateProjectPage />} />
+          <Route path="/projects/:projectId/edit" element={<EditProjectPage />} />
         </Routes>
       </MainLayout>
     </BrowserRouter>

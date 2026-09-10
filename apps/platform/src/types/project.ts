@@ -10,3 +10,11 @@ export type Project = {
   description: string;
   type: string;
 };
+
+export type CreateProjectInput = {
+  name: string;
+  id: string;
+  status: ProjectStatus;
+  description: string;
+  type: string;
+};
