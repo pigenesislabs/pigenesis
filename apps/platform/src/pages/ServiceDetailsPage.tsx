@@ -1,14 +1,14 @@
 import { Link, useParams } from "react-router-dom";
-import { services } from "../services/serviceService";
+import { getServiceById } from "../services/serviceService";
 
 import StatusText from "../components/ui/StatusText";
 
 function ServiceDetailsPage() {
   const { serviceId } = useParams();
 
-  const service = services.find(
-    (item) => item.id === serviceId
-  );
+  const service = serviceId
+    ? getServiceById(serviceId)
+    : undefined;
 
   if (!service) {
     return (
@@ -52,7 +52,12 @@ function ServiceDetailsPage() {
             </p>
           </div>
 
-          {/*<StatusBadge status={service.status} />*/}
+          <Link
+            to={`/services/${service.id}/edit`}
+            className="rounded-lg bg-blue-600 px-5 py-3 text-center font-medium text-white hover:bg-blue-500"
+          >
+            Edit Service
+          </Link>
         </div>
       </div>
 

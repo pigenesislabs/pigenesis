@@ -1,9 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import {
-  createService,
-  getServiceById,
-  getServices,
-} from "./serviceService";
+import { createService, getServiceById, getServices, updateService } from "./serviceService";
 
 const STORAGE_KEY = "pigenesis_services";
 
@@ -178,5 +174,124 @@ describe("serviceService", () => {
         category: "Technology",
       })
     ).toThrow("Service status is invalid.");
+  });
+  it("updates an existing service", () => {
+    const updatedService = updateService(
+      "ai-consulting",
+      {
+        name: "Advanced AI Consulting",
+        status: "Active",
+        description:
+          "Advanced AI strategy and intelligent system consulting",
+        category: "Artificial Intelligence",
+      }
+    );
+
+    expect(updatedService).toBeDefined();
+    expect(updatedService?.id).toBe(
+      "ai-consulting"
+    );
+    expect(updatedService?.name).toBe(
+      "Advanced AI Consulting"
+    );
+    expect(updatedService?.status).toBe("Active");
+  });
+
+  it("persists an updated service", () => {
+    updateService(
+      "workflow-automation",
+      {
+        name: "Intelligent Workflow Automation",
+        status: "Active",
+        description:
+          "Advanced business workflow automation",
+        category: "Automation",
+      }
+    );
+
+    const service = getServiceById(
+      "workflow-automation"
+    );
+
+    expect(service?.name).toBe(
+      "Intelligent Workflow Automation"
+    );
+    expect(service?.status).toBe("Active");
+  });
+
+  it("returns undefined when updating a nonexistent service", () => {
+    const result = updateService(
+      "unknown-service",
+      {
+        name: "Test Service",
+        status: "Planning",
+        description: "Test description",
+        category: "Technology",
+      }
+    );
+
+    expect(result).toBeUndefined();
+  });
+
+  it("rejects an empty service name during update", () => {
+    expect(() =>
+      updateService(
+        "ai-consulting",
+        {
+          name: "",
+          status: "Planning",
+          description: "Test description",
+          category: "Technology",
+        }
+      )
+    ).toThrow("Service name is required.");
+  });
+
+  it("rejects an empty service description during update", () => {
+    expect(() =>
+      updateService(
+        "ai-consulting",
+        {
+          name: "AI Consulting",
+          status: "Planning",
+          description: "",
+          category: "Technology",
+        }
+      )
+    ).toThrow(
+      "Service description is required."
+    );
+  });
+
+  it("rejects an empty service category during update", () => {
+    expect(() =>
+      updateService(
+        "ai-consulting",
+        {
+          name: "AI Consulting",
+          status: "Planning",
+          description: "Test description",
+          category: "",
+        }
+      )
+    ).toThrow(
+      "Service category is required."
+    );
+  });
+
+  it("rejects an invalid service status during update", () => {
+    expect(() =>
+      updateService(
+        "ai-consulting",
+        {
+          name: "AI Consulting",
+          status: "Invalid" as never,
+          description: "Test description",
+          category: "Technology",
+        }
+      )
+    ).toThrow(
+      "Service status is invalid."
+    );
   });
 });

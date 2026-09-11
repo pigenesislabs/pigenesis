@@ -3,6 +3,9 @@ import type {
   Service,
 } from "../types/service";
 
+import { createAppError } from "../utils/errorHandler";
+import { logError, logInfo } from "../utils/logger";
+
 const STORAGE_KEY = "pigenesis_services";
 
 function validateServiceInput(
@@ -40,6 +43,44 @@ function validateServiceInput(
 
   if (!validStatuses.includes(input.status)) {
     throw new Error("Service status is invalid.");
+  }
+}
+
+function validateServiceUpdates(
+  updates: Omit<Service, "id">
+): void {
+  if (!updates.name.trim()) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Service name is required."
+    );
+  }
+
+  if (!updates.description.trim()) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Service description is required."
+    );
+  }
+
+  if (!updates.category.trim()) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Service category is required."
+    );
+  }
+
+  const validStatuses: Service["status"][] = [
+    "Planning",
+    "Active",
+    "Coming Soon",
+  ];
+
+  if (!validStatuses.includes(updates.status)) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Service status is invalid."
+    );
   }
 }
 
@@ -110,6 +151,57 @@ export function getServiceById(
   return currentServices.find(
     (service) => service.id === serviceId
   );
+}
+
+export function updateService(
+  serviceId: string,
+  updates: Omit<Service, "id">
+): Service | undefined {
+  validateServiceUpdates(updates);
+
+  const currentServices = loadServices();
+
+  const serviceIndex = currentServices.findIndex(
+    (service) => service.id === serviceId
+  );
+
+  if (serviceIndex === -1) {
+    logError("Service update failed", {
+      operation: "updateService",
+      serviceId,
+      errorCode: "NOT_FOUND",
+    });
+
+    return undefined;
+  }
+
+  const updatedService: Service = {
+    ...currentServices[serviceIndex],
+    ...updates,
+    id: serviceId,
+  };
+
+  const updatedServices = [...currentServices];
+
+  updatedServices[serviceIndex] = updatedService;
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(updatedServices)
+  );
+
+  services = updatedServices;
+
+  window.dispatchEvent(
+    new Event("pigenesis-services-updated")
+  );
+
+  logInfo("Service updated", {
+    operation: "updateService",
+    serviceId,
+  });
+
+  return updatedService;
 }
 
 export function createService(
