@@ -5,6 +5,70 @@ import type {
 
 const STORAGE_KEY = "pigenesis_products";
 
+function validateProductInput(
+  input: CreateProductInput
+): void {
+  const productId = input.id.trim();
+
+  if (!productId) {
+    throw new Error("Product ID is required.");
+  }
+
+  if (!/^[a-z0-9-]+$/.test(productId)) {
+    throw new Error(
+      "Product ID can contain only lowercase letters, numbers, and hyphens."
+    );
+  }
+
+  if (!input.name.trim()) {
+    throw new Error("Product name is required.");
+  }
+
+  if (!input.description.trim()) {
+    throw new Error("Product description is required.");
+  }
+
+  if (!input.category.trim()) {
+    throw new Error("Product category is required.");
+  }
+
+  const validStatuses: Product["status"][] = [
+    "Planning",
+    "Active",
+    "Coming Soon",
+  ];
+
+  if (!validStatuses.includes(input.status)) {
+    throw new Error("Product status is invalid.");
+  }
+}
+
+function validateProductUpdates(
+  updates: Omit<Product, "id">
+): void {
+  if (!updates.name.trim()) {
+    throw new Error("Product name is required.");
+  }
+
+  if (!updates.description.trim()) {
+    throw new Error("Product description is required.");
+  }
+
+  if (!updates.category.trim()) {
+    throw new Error("Product category is required.");
+  }
+
+  const validStatuses: Product["status"][] = [
+    "Planning",
+    "Active",
+    "Coming Soon",
+  ];
+
+  if (!validStatuses.includes(updates.status)) {
+    throw new Error("Product status is invalid.");
+  }
+}
+
 const defaultProducts: Product[] = [
   {
     id: "pi-flow",
@@ -77,9 +141,50 @@ export function getProductById(
   );
 }
 
+export function updateProduct(
+  productId: string,
+  updates: Omit<Product, "id">
+): Product | undefined {
+  validateProductUpdates(updates);
+
+  const currentProducts = loadProducts();
+
+  const productIndex = currentProducts.findIndex(
+    (product) => product.id === productId
+  );
+
+  if (productIndex === -1) {
+    return undefined;
+  }
+
+  const updatedProduct: Product = {
+    ...currentProducts[productIndex],
+    ...updates,
+    id: productId,
+  };
+
+  const updatedProducts = [...currentProducts];
+
+  updatedProducts[productIndex] = updatedProduct;
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(updatedProducts)
+  );
+
+  products = updatedProducts;
+
+  window.dispatchEvent(
+    new Event("pigenesis-products-updated")
+  );
+
+  return updatedProduct;
+}
+
 export function createProduct(
   input: CreateProductInput
 ): Product {
+  validateProductInput(input);
   const currentProducts = loadProducts();
 
   if (

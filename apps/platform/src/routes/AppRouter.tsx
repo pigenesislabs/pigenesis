@@ -12,6 +12,7 @@ import ProductDetailsPage from "../pages/ProductDetailsPage";
 import ServiceDetailsPage from "../pages/ServiceDetailsPage";
 import CreateProjectPage from "../pages/CreateProjectPage";
 import EditProjectPage from "../pages/EditProjectPage";
+import EditProductPage from "../pages/EditProductPage";
 
 function AppRouter() {
   return (
@@ -28,6 +29,7 @@ function AppRouter() {
           <Route path="/services/:serviceId" element={<ServiceDetailsPage />} />
           <Route path="/projects/new" element={<CreateProjectPage />} />
           <Route path="/projects/:projectId/edit" element={<EditProjectPage />} />
+          <Route path="/products/:productId/edit" element={<EditProductPage />} />
         </Routes>
       </MainLayout>
     </BrowserRouter>

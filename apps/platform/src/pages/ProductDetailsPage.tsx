@@ -1,14 +1,15 @@
-import { Link, useParams } from "react-router-dom";
-import { products } from "../services/productService";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { getProductById } from "../services/productService";
 
 import StatusText from "../components/ui/StatusText";
 
 function ProductDetailsPage() {
   const { productId } = useParams();
+  const navigate = useNavigate();
 
-  const product = products.find(
-    (item) => item.id === productId
-  );
+  const product = productId
+    ? getProductById(productId)
+    : undefined;
 
   if (!product) {
     return (
@@ -41,7 +42,7 @@ function ProductDetailsPage() {
       </Link>
 
       <div className="mt-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
           <div>
             <h1 className="text-5xl font-bold text-white">
               {product.name}
@@ -52,7 +53,15 @@ function ProductDetailsPage() {
             </p>
           </div>
 
-          {/*<StatusBadge status={product.status} />*/}
+          <button
+            type="button"
+            onClick={() =>
+              navigate(`/products/${product.id}/edit`)
+            }
+            className="shrink-0 rounded-lg bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-500"
+          >
+            Edit Product
+          </button>
         </div>
       </div>
 
