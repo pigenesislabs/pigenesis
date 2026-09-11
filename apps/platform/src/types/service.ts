@@ -10,3 +10,11 @@ export type Service = {
   description: string;
   category: string;
 };
+
+export type CreateServiceInput = {
+  id: string;
+  name: string;
+  status: ServiceStatus;
+  description: string;
+  category: string;
+};

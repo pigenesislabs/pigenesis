@@ -1,0 +1,182 @@
+import { beforeEach, describe, expect, it } from "vitest";
+import {
+  createService,
+  getServiceById,
+  getServices,
+} from "./serviceService";
+
+const STORAGE_KEY = "pigenesis_services";
+
+describe("serviceService", () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it("loads default services when storage is empty", () => {
+    const services = getServices();
+
+    expect(services).toHaveLength(3);
+    expect(services[0].id).toBe("ai-consulting");
+  });
+
+  it("returns all services", () => {
+    const services = getServices();
+
+    expect(services).toHaveLength(3);
+  });
+
+  it("returns a service by id", () => {
+    const service = getServiceById(
+      "workflow-automation"
+    );
+
+    expect(service).toBeDefined();
+    expect(service?.name).toBe(
+      "Workflow Automation"
+    );
+  });
+
+  it("returns undefined for an unknown service", () => {
+    const service = getServiceById(
+      "unknown-service"
+    );
+
+    expect(service).toBeUndefined();
+  });
+
+  it("creates a new service", () => {
+    const service = createService({
+      id: "data-automation",
+      name: "Data Automation",
+      status: "Planning",
+      description:
+        "Intelligent data automation services",
+      category: "Automation",
+    });
+
+    expect(service.id).toBe("data-automation");
+
+    const services = getServices();
+
+    expect(services).toHaveLength(4);
+    expect(
+      services.some(
+        (item) => item.id === "data-automation"
+      )
+    ).toBe(true);
+  });
+
+  it("persists a newly created service", () => {
+    createService({
+      id: "cloud-solutions",
+      name: "Cloud Solutions",
+      status: "Active",
+      description:
+        "Cloud architecture and implementation services",
+      category: "Cloud",
+    });
+
+    const storedServices =
+      localStorage.getItem(STORAGE_KEY);
+
+    expect(storedServices).not.toBeNull();
+
+    const parsedServices = JSON.parse(
+      storedServices as string
+    );
+
+    expect(parsedServices).toHaveLength(4);
+    expect(parsedServices[3].id).toBe(
+      "cloud-solutions"
+    );
+  });
+
+  it("prevents duplicate service ids", () => {
+    expect(() =>
+      createService({
+        id: "ai-consulting",
+        name: "Another AI Consulting",
+        status: "Planning",
+        description:
+          "Another consulting service",
+        category: "Artificial Intelligence",
+      })
+    ).toThrow(
+      "A service with this ID already exists."
+    );
+  });
+
+  it("rejects an empty service id", () => {
+    expect(() =>
+      createService({
+        id: "",
+        name: "Test Service",
+        status: "Planning",
+        description: "Test description",
+        category: "Technology",
+      })
+    ).toThrow("Service ID is required.");
+  });
+
+  it("rejects an invalid service id", () => {
+    expect(() =>
+      createService({
+        id: "Test_Service",
+        name: "Test Service",
+        status: "Planning",
+        description: "Test description",
+        category: "Technology",
+      })
+    ).toThrow(
+      "Service ID can contain only lowercase letters, numbers, and hyphens."
+    );
+  });
+
+  it("rejects an empty service name", () => {
+    expect(() =>
+      createService({
+        id: "test-service",
+        name: "",
+        status: "Planning",
+        description: "Test description",
+        category: "Technology",
+      })
+    ).toThrow("Service name is required.");
+  });
+
+  it("rejects an empty service description", () => {
+    expect(() =>
+      createService({
+        id: "test-service",
+        name: "Test Service",
+        status: "Planning",
+        description: "",
+        category: "Technology",
+      })
+    ).toThrow("Service description is required.");
+  });
+
+  it("rejects an empty service category", () => {
+    expect(() =>
+      createService({
+        id: "test-service",
+        name: "Test Service",
+        status: "Planning",
+        description: "Test description",
+        category: "",
+      })
+    ).toThrow("Service category is required.");
+  });
+
+  it("rejects an invalid service status", () => {
+    expect(() =>
+      createService({
+        id: "test-service",
+        name: "Test Service",
+        status: "Invalid" as never,
+        description: "Test description",
+        category: "Technology",
+      })
+    ).toThrow("Service status is invalid.");
+  });
+});
