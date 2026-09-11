@@ -1,12 +1,30 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getProductById } from "../services/productService";
+import { deleteProduct, getProductById } from "../services/productService";
 
 import StatusText from "../components/ui/StatusText";
 
 function ProductDetailsPage() {
   const { productId } = useParams();
   const navigate = useNavigate();
+  function handleDelete() {
+    if (!product) {
+      return;
+    }
 
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${product.name}"?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const deleted = deleteProduct(product.id);
+
+    if (deleted) {
+      navigate("/products");
+    }
+  }
   const product = productId
     ? getProductById(productId)
     : undefined;
@@ -53,15 +71,25 @@ function ProductDetailsPage() {
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={() =>
-              navigate(`/products/${product.id}/edit`)
-            }
-            className="shrink-0 rounded-lg bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-500"
-          >
-            Edit Product
-          </button>
+          <div className="flex shrink-0 gap-3">
+            <button
+              type="button"
+              onClick={() =>
+                navigate(`/products/${product.id}/edit`)
+              }
+              className="rounded-lg bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-500"
+            >
+              Edit Product
+            </button>
+
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="rounded-lg border border-red-700 px-5 py-3 font-medium text-red-400 transition hover:border-red-500 hover:bg-red-950 hover:text-red-300"
+            >
+              Delete Product
+            </button>
+          </div>
         </div>
       </div>
 

@@ -181,6 +181,37 @@ export function updateProduct(
   return updatedProduct;
 }
 
+export function deleteProduct(
+  productId: string
+): boolean {
+  const currentProducts = loadProducts();
+
+  const productExists = currentProducts.some(
+    (product) => product.id === productId
+  );
+
+  if (!productExists) {
+    return false;
+  }
+
+  const updatedProducts = currentProducts.filter(
+    (product) => product.id !== productId
+  );
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(updatedProducts)
+  );
+
+  products = updatedProducts;
+
+  window.dispatchEvent(
+    new Event("pigenesis-products-updated")
+  );
+
+  return true;
+}
+
 export function createProduct(
   input: CreateProductInput
 ): Product {
