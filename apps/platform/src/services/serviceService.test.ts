@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { createService, getServiceById, getServices, updateService } from "./serviceService";
+import { createService, getServiceById, getServices, updateService, deleteService } from "./serviceService";
 
 const STORAGE_KEY = "pigenesis_services";
 
@@ -293,5 +293,43 @@ describe("serviceService", () => {
     ).toThrow(
       "Service status is invalid."
     );
+  });
+    it("deletes an existing service", () => {
+    const result = deleteService(
+      "ai-consulting"
+    );
+
+    expect(result).toBe(true);
+
+    const service = getServiceById(
+      "ai-consulting"
+    );
+
+    expect(service).toBeUndefined();
+  });
+
+  it("returns false when deleting a nonexistent service", () => {
+    const result = deleteService(
+      "unknown-service"
+    );
+
+    expect(result).toBe(false);
+  });
+
+  it("persists service deletion", () => {
+    deleteService(
+      "workflow-automation"
+    );
+
+    const services = getServices();
+
+    expect(services).toHaveLength(2);
+
+    expect(
+      services.some(
+        (service) =>
+          service.id === "workflow-automation"
+      )
+    ).toBe(false);
   });
 });

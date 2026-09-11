@@ -1,5 +1,8 @@
 import { Link, useParams } from "react-router-dom";
-import { getServiceById } from "../services/serviceService";
+import {
+  deleteService,
+  getServiceById,
+} from "../services/serviceService";
 
 import StatusText from "../components/ui/StatusText";
 
@@ -30,7 +33,23 @@ function ServiceDetailsPage() {
       </div>
     );
   }
+  const currentServiceId = service.id;
+const currentServiceName = service.name;
+  function handleDelete() {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${currentServiceName}"?`
+    );
 
+    if (!confirmed) {
+      return;
+    }
+
+    const deleted = deleteService(currentServiceId);
+
+    if (deleted) {
+      window.location.href = "/services";
+    }
+  }
   return (
     <div>
       <Link
@@ -52,12 +71,22 @@ function ServiceDetailsPage() {
             </p>
           </div>
 
-          <Link
-            to={`/services/${service.id}/edit`}
-            className="rounded-lg bg-blue-600 px-5 py-3 text-center font-medium text-white hover:bg-blue-500"
-          >
-            Edit Service
-          </Link>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Link
+              to={`/services/${service.id}/edit`}
+              className="rounded-lg bg-blue-600 px-5 py-3 text-center font-medium text-white hover:bg-blue-500"
+            >
+              Edit Service
+            </Link>
+
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="rounded-lg border border-red-800 px-5 py-3 font-medium text-red-400 hover:bg-red-950/40"
+            >
+              Delete Service
+            </button>
+          </div>
         </div>
       </div>
 

@@ -204,6 +204,48 @@ export function updateService(
   return updatedService;
 }
 
+export function deleteService(
+  serviceId: string
+): boolean {
+  const currentServices = loadServices();
+
+  const serviceExists = currentServices.some(
+    (service) => service.id === serviceId
+  );
+
+  if (!serviceExists) {
+    logError("Service deletion failed", {
+      operation: "deleteService",
+      serviceId,
+      errorCode: "NOT_FOUND",
+    });
+
+    return false;
+  }
+
+  const updatedServices = currentServices.filter(
+    (service) => service.id !== serviceId
+  );
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(updatedServices)
+  );
+
+  services = updatedServices;
+
+  window.dispatchEvent(
+    new Event("pigenesis-services-updated")
+  );
+
+  logInfo("Service deleted", {
+    operation: "deleteService",
+    serviceId,
+  });
+
+  return true;
+}
+
 export function createService(
   input: CreateServiceInput
 ): Service {
