@@ -1,9 +1,6 @@
 import { createAppError } from "../utils/errorHandler";
-
-import type {
-  CreateProjectInput,
-  Project,
-} from "../types/project";
+import { logError, logInfo, } from "../utils/logger";
+import type { CreateProjectInput, Project, } from "../types/project";
 
 const STORAGE_KEY = "pigenesis_projects";
 
@@ -79,6 +76,12 @@ export function createProject(
       (project) => project.id === input.id
     )
   ) {
+    logError("Project creation failed", {
+      operation: "createProject",
+      projectId: input.id,
+      errorCode: "DUPLICATE",
+    });
+
     throw createAppError(
       "DUPLICATE",
       "A project with this ID already exists."
@@ -108,6 +111,11 @@ export function createProject(
   window.dispatchEvent(
     new Event("pigenesis-projects-updated")
   );
+
+  logInfo("Project created", {
+    operation: "createProject",
+    projectId: project.id,
+  });
 
   return project;
 }
@@ -164,6 +172,12 @@ export function deleteProject(projectId: string): boolean {
   );
 
   if (!projectExists) {
+    logError("Project deletion failed", {
+      operation: "deleteProject",
+      projectId,
+      errorCode: "NOT_FOUND",
+    });
+
     return false;
   }
 
@@ -179,6 +193,10 @@ export function deleteProject(projectId: string): boolean {
   window.dispatchEvent(
     new Event("pigenesis-projects-updated")
   );
+  logInfo("Project deleted", {
+    operation: "deleteProject",
+    projectId,
+  });
 
   return true;
 }
