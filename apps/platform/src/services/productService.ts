@@ -1,37 +1,84 @@
-import type {
-  CreateProductInput,
-  Product,
-} from "../types/product";
+import type { CreateProductInput, Product, } from "../types/product";
+import { createAppError } from "../utils/errorHandler";
+import { logError, logInfo } from "../utils/logger";
 
 const STORAGE_KEY = "pigenesis_products";
 
+function readProductsFromStorage(): string | null {
+  try {
+    return localStorage.getItem(STORAGE_KEY);
+  } catch (error) {
+    logError("Product storage read failed", {
+      operation: "readProductsFromStorage",
+      error,
+    });
+
+    throw createAppError(
+      "STORAGE_ERROR",
+      "Unable to read product data from storage."
+    );
+  }
+}
+
+function saveProductsToStorage(
+  productsToSave: Product[]
+): void {
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(productsToSave)
+    );
+  } catch (error) {
+    logError("Product storage write failed", {
+      operation: "saveProductsToStorage",
+      error,
+    });
+
+    throw createAppError(
+      "STORAGE_ERROR",
+      "Unable to save product data to storage."
+    );
+  }
+}
 function validateProductInput(
   input: CreateProductInput
 ): void {
   const productId = input.id.trim();
 
   if (!productId) {
-    throw new Error("Product ID is required.");
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Product ID is required."
+    );
   }
 
   if (!/^[a-z0-9-]+$/.test(productId)) {
-    throw new Error(
+    throw createAppError(
+      "VALIDATION_ERROR",
       "Product ID can contain only lowercase letters, numbers, and hyphens."
     );
   }
 
   if (!input.name.trim()) {
-    throw new Error("Product name is required.");
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Product name is required."
+    );
   }
 
   if (!input.description.trim()) {
-    throw new Error("Product description is required.");
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Product description is required."
+    );
   }
 
   if (!input.category.trim()) {
-    throw new Error("Product category is required.");
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Product category is required."
+    );
   }
-
   const validStatuses: Product["status"][] = [
     "Planning",
     "Active",
@@ -39,7 +86,10 @@ function validateProductInput(
   ];
 
   if (!validStatuses.includes(input.status)) {
-    throw new Error("Product status is invalid.");
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Product status is invalid."
+    );
   }
 }
 
@@ -47,17 +97,25 @@ function validateProductUpdates(
   updates: Omit<Product, "id">
 ): void {
   if (!updates.name.trim()) {
-    throw new Error("Product name is required.");
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Product name is required."
+    );
   }
 
   if (!updates.description.trim()) {
-    throw new Error("Product description is required.");
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Product description is required."
+    );
   }
 
   if (!updates.category.trim()) {
-    throw new Error("Product category is required.");
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Product category is required."
+    );
   }
-
   const validStatuses: Product["status"][] = [
     "Planning",
     "Active",
@@ -65,7 +123,10 @@ function validateProductUpdates(
   ];
 
   if (!validStatuses.includes(updates.status)) {
-    throw new Error("Product status is invalid.");
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Product status is invalid."
+    );
   }
 }
 
@@ -101,25 +162,23 @@ const defaultProducts: Product[] = [
 ];
 
 function loadProducts(): Product[] {
-  const storedProducts = localStorage.getItem(STORAGE_KEY);
+  const storedProducts =
+    readProductsFromStorage();
 
   if (!storedProducts) {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(defaultProducts)
-    );
-
+    saveProductsToStorage(defaultProducts);
     return defaultProducts;
   }
 
   try {
     return JSON.parse(storedProducts) as Product[];
-  } catch {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(defaultProducts)
-    );
+  } catch (error) {
+    logError("Product storage data is invalid", {
+      operation: "loadProducts",
+      error,
+    });
 
+    saveProductsToStorage(defaultProducts);
     return defaultProducts;
   }
 }
@@ -167,17 +226,17 @@ export function updateProduct(
 
   updatedProducts[productIndex] = updatedProduct;
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(updatedProducts)
-  );
+  saveProductsToStorage(updatedProducts);
 
   products = updatedProducts;
 
   window.dispatchEvent(
     new Event("pigenesis-products-updated")
   );
-
+  logInfo("Product updated", {
+    operation: "updateProduct",
+    productId,
+  });
   return updatedProduct;
 }
 
@@ -191,6 +250,11 @@ export function deleteProduct(
   );
 
   if (!productExists) {
+    logError("Product deletion failed", {
+      operation: "deleteProduct",
+      productId,
+      errorCode: "NOT_FOUND",
+    });
     return false;
   }
 
@@ -198,17 +262,16 @@ export function deleteProduct(
     (product) => product.id !== productId
   );
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(updatedProducts)
-  );
-
+  saveProductsToStorage(updatedProducts);
   products = updatedProducts;
 
   window.dispatchEvent(
     new Event("pigenesis-products-updated")
   );
-
+  logInfo("Product deleted", {
+    operation: "deleteProduct",
+    productId,
+  });
   return true;
 }
 
@@ -223,7 +286,14 @@ export function createProduct(
       (product) => product.id === input.id
     )
   ) {
-    throw new Error(
+    logError("Product creation failed", {
+      operation: "createProduct",
+      productId: input.id,
+      errorCode: "DUPLICATE",
+    });
+
+    throw createAppError(
+      "DUPLICATE",
       "A product with this ID already exists."
     );
   }
@@ -241,16 +311,18 @@ export function createProduct(
     product,
   ];
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(updatedProducts)
-  );
+  saveProductsToStorage(updatedProducts);
 
   products = updatedProducts;
 
   window.dispatchEvent(
     new Event("pigenesis-products-updated")
   );
+
+  logInfo("Product created", {
+    operation: "createProduct",
+    productId: product.id,
+  });
 
   return product;
 }

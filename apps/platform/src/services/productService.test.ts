@@ -203,4 +203,51 @@ describe("productService", () => {
       )
     ).toEqual([]);
   });
+  it("handles product storage read failure", () => {
+    const originalStorage = globalThis.localStorage;
+
+    Object.defineProperty(globalThis, "localStorage", {
+      configurable: true,
+      value: {
+        getItem: () => {
+          throw new Error("Storage read failed");
+        },
+        setItem: () => {},
+        clear: () => {},
+      },
+    });
+
+    expect(() => getProducts()).toThrow(
+      "Unable to read product data from storage."
+    );
+
+    Object.defineProperty(globalThis, "localStorage", {
+      configurable: true,
+      value: originalStorage,
+    });
+  });
+
+  it("handles product storage write failure", () => {
+    const originalStorage = globalThis.localStorage;
+
+    Object.defineProperty(globalThis, "localStorage", {
+      configurable: true,
+      value: {
+        getItem: () => null,
+        setItem: () => {
+          throw new Error("Storage write failed");
+        },
+        clear: () => {},
+      },
+    });
+
+    expect(() => getProducts()).toThrow(
+      "Unable to save product data to storage."
+    );
+
+    Object.defineProperty(globalThis, "localStorage", {
+      configurable: true,
+      value: originalStorage,
+    });
+  });
 });
