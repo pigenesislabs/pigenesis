@@ -61,13 +61,15 @@ function ProductDetailsPage() {
 
       <div className="mt-6">
         <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+          <h1 className="text-5xl font-bold text-white">
+            {product.name}
+          </h1>
           <div>
-            <h1 className="text-5xl font-bold text-white">
-              {product.name}
-            </h1>
-
-            <p className="mt-4 text-xl text-slate-400">
-              {product.description}
+            <p className="text-lg font-medium uppercase tracking-wide text-white">
+              Product ID
+            </p>
+            <p className="mt-2 text-lg font-medium text-slate-500">
+              {product.id}
             </p>
           </div>
 

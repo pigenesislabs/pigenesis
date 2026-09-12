@@ -112,13 +112,24 @@ function ProductsPage() {
 
   return (
     <div>
-      <h1 className="text-5xl font-bold text-white">
-        Products
-      </h1>
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-5xl font-bold text-white">
+            Products
+          </h1>
 
-      <p className="mt-4 text-xl text-slate-400">
-        PiGenesis product ecosystem.
-      </p>
+          <p className="mt-4 text-xl text-slate-400">
+            PiGenesis product ecosystem.
+          </p>
+        </div>
+
+        <Link
+          to="/products/new"
+          className="rounded-lg bg-blue-600 px-5 py-3 text-center font-medium text-white hover:bg-blue-500"
+        >
+          + Create Product
+        </Link>
+      </div>
 
       {/* Search / Filter / Sort */}
       <div className="mt-8 grid gap-4 md:grid-cols-3">
@@ -158,8 +169,8 @@ function ProductsPage() {
             onChange={(event) =>
               setStatusFilter(
                 event.target.value as
-                  | ProductStatus
-                  | "All"
+                | ProductStatus
+                | "All"
               )
             }
             className="mt-2 w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-white outline-none focus:border-blue-500"
@@ -255,7 +266,9 @@ function ProductsPage() {
                     <h2 className="text-2xl font-semibold text-white">
                       {product.name}
                     </h2>
-
+                    <p className="mt-2 text-sm text-slate-500">
+                      {product.id}
+                    </p>
                     <p className="mt-3 text-slate-400">
                       {product.description}
                     </p>
