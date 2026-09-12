@@ -185,13 +185,13 @@ function ProjectsPage() {
               onChange={(event) =>
                 setStatusFilter(
                   event.target.value as
-                    | "All"
-                    | ProjectStatus
+                  | "All"
+                  | ProjectStatus
                 )
               }
               className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-500"
             >
-              <option value="All">All Statuses</option>
+              <option value="All">All Status</option>
               <option value="Active">Active</option>
               <option value="Planning">Planning</option>
               <option value="Completed">Completed</option>
@@ -213,10 +213,10 @@ function ProjectsPage() {
               onChange={(event) =>
                 setSortOption(
                   event.target.value as
-                    | "newest"
-                    | "oldest"
-                    | "name-asc"
-                    | "name-desc"
+                  | "newest"
+                  | "oldest"
+                  | "name-asc"
+                  | "name-desc"
                 )
               }
               className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-500"
@@ -231,12 +231,18 @@ function ProjectsPage() {
       </div>
 
       {/* Project Count */}
+      {/* Project Count */}
       <div className="mt-6">
         <p className="text-sm text-slate-500">
-          {filteredProjects.length}{" "}
-          {filteredProjects.length === 1
-            ? "project"
-            : "projects"}
+          Showing{" "}
+          <span className="font-medium text-slate-300">
+            {filteredProjects.length}
+          </span>{" "}
+          of{" "}
+          <span className="font-medium text-slate-300">
+            {projects.length}
+          </span>{" "}
+          projects
         </p>
       </div>
 

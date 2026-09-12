@@ -1,4 +1,8 @@
-import { Link, useParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import {
   deleteService,
   getServiceById,
@@ -8,7 +12,7 @@ import StatusText from "../components/ui/StatusText";
 
 function ServiceDetailsPage() {
   const { serviceId } = useParams();
-
+  const navigate = useNavigate();
   const service = serviceId
     ? getServiceById(serviceId)
     : undefined;
@@ -34,7 +38,7 @@ function ServiceDetailsPage() {
     );
   }
   const currentServiceId = service.id;
-const currentServiceName = service.name;
+  const currentServiceName = service.name;
   function handleDelete() {
     const confirmed = window.confirm(
       `Are you sure you want to delete "${currentServiceName}"?`
@@ -47,7 +51,7 @@ const currentServiceName = service.name;
     const deleted = deleteService(currentServiceId);
 
     if (deleted) {
-      window.location.href = "/services";
+      navigate("/services");
     }
   }
   return (
@@ -61,13 +65,16 @@ const currentServiceName = service.name;
 
       <div className="mt-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <h1 className="text-5xl font-bold text-white">
+            {service.name}
+          </h1>
           <div>
-            <h1 className="text-5xl font-bold text-white">
-              {service.name}
-            </h1>
+            <p className="text-lg font-medium uppercase tracking-wide text-white">
+              Service ID
+            </p>
 
-            <p className="mt-4 text-xl text-slate-400">
-              {service.description}
+            <p className="mt-2 text-lg font-medium text-slate-500">
+              {service.id}
             </p>
           </div>
 
