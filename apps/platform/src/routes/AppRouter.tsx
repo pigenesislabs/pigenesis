@@ -12,6 +12,7 @@ import ProductDetailsPage from "../pages/ProductDetailsPage";
 import ServiceDetailsPage from "../pages/ServiceDetailsPage";
 import CreateProjectPage from "../pages/CreateProjectPage";
 import CreateProductPage from "../pages/CreateProductPage";
+import CreateServicePage from "../pages/CreateServicePage";
 import EditProjectPage from "../pages/EditProjectPage";
 import EditProductPage from "../pages/EditProductPage";
 import EditServicePage from "../pages/EditServicePage";
@@ -31,6 +32,7 @@ function AppRouter() {
           <Route path="/services/:serviceId" element={<ServiceDetailsPage />} />
           <Route path="/projects/new" element={<CreateProjectPage />} />
           <Route path="/products/new" element={<CreateProductPage />} />
+          <Route path="/services/new" element={<CreateServicePage />} />
           <Route path="/projects/:projectId/edit" element={<EditProjectPage />} />
           <Route path="/products/:productId/edit" element={<EditProductPage />} />
           <Route path="/services/:serviceId/edit" element={<EditServicePage />} />

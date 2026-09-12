@@ -114,13 +114,24 @@ function ServicesPage() {
 
   return (
     <div>
-      <h1 className="text-5xl font-bold text-white">
-        Services
-      </h1>
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-5xl font-bold text-white">
+            Services
+          </h1>
 
-      <p className="mt-4 text-xl text-slate-400">
-        PiGenesis services and capabilities.
-      </p>
+          <p className="mt-4 text-xl text-slate-400">
+            PiGenesis services and capabilities.
+          </p>
+        </div>
+
+        <Link
+          to="/services/new"
+          className="rounded-lg bg-blue-600 px-5 py-3 text-center font-medium text-white hover:bg-blue-500"
+        >
+          + Create Service
+        </Link>
+      </div>
 
       {/* Search / Filter / Sort */}
 
@@ -164,8 +175,8 @@ function ServicesPage() {
             onChange={(event) =>
               setStatusFilter(
                 event.target.value as
-                  | ServiceStatus
-                  | "All"
+                | ServiceStatus
+                | "All"
               )
             }
             className="mt-2 w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-white outline-none focus:border-blue-500"
@@ -269,7 +280,9 @@ function ServicesPage() {
                     <h2 className="text-2xl font-semibold text-white">
                       {service.name}
                     </h2>
-
+                    <p className="mt-3 text-slate-400">
+                      {service.id}
+                    </p>
                     <p className="mt-3 text-slate-400">
                       {service.description}
                     </p>
