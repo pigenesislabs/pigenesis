@@ -1,25 +1,291 @@
-import type { Service } from "../types/service";
+import type {
+  CreateServiceInput,
+  Service,
+} from "../types/service";
 
-export const services: Service[] = [
+import { createAppError } from "../utils/errorHandler";
+import { logError, logInfo } from "../utils/logger";
+
+const STORAGE_KEY = "pigenesis_services";
+
+function validateServiceInput(
+  input: CreateServiceInput
+): void {
+  const serviceId = input.id.trim();
+
+  if (!serviceId) {
+    throw new Error("Service ID is required.");
+  }
+
+  if (!/^[a-z0-9-]+$/.test(serviceId)) {
+    throw new Error(
+      "Service ID can contain only lowercase letters, numbers, and hyphens."
+    );
+  }
+
+  if (!input.name.trim()) {
+    throw new Error("Service name is required.");
+  }
+
+  if (!input.description.trim()) {
+    throw new Error("Service description is required.");
+  }
+
+  if (!input.category.trim()) {
+    throw new Error("Service category is required.");
+  }
+
+  const validStatuses: Service["status"][] = [
+    "Planning",
+    "Active",
+    "Coming Soon",
+  ];
+
+  if (!validStatuses.includes(input.status)) {
+    throw new Error("Service status is invalid.");
+  }
+}
+
+function validateServiceUpdates(
+  updates: Omit<Service, "id">
+): void {
+  if (!updates.name.trim()) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Service name is required."
+    );
+  }
+
+  if (!updates.description.trim()) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Service description is required."
+    );
+  }
+
+  if (!updates.category.trim()) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Service category is required."
+    );
+  }
+
+  const validStatuses: Service["status"][] = [
+    "Planning",
+    "Active",
+    "Coming Soon",
+  ];
+
+  if (!validStatuses.includes(updates.status)) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Service status is invalid."
+    );
+  }
+}
+
+const defaultServices: Service[] = [
   {
     id: "ai-consulting",
     name: "AI Consulting",
     status: "Planning",
-    description: "AI strategy and intelligent system consulting",
+    description:
+      "AI strategy and intelligent system consulting",
     category: "Artificial Intelligence",
   },
   {
     id: "workflow-automation",
     name: "Workflow Automation",
     status: "Planning",
-    description: "Intelligent business workflow automation",
+    description:
+      "Intelligent business workflow automation",
     category: "Automation",
   },
   {
     id: "digital-solutions",
     name: "Digital Solutions",
     status: "Coming Soon",
-    description: "Custom digital solutions for organizations",
+    description:
+      "Custom digital solutions for organizations",
     category: "Technology",
   },
 ];
+
+function loadServices(): Service[] {
+  const storedServices =
+    localStorage.getItem(STORAGE_KEY);
+
+  if (!storedServices) {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(defaultServices)
+    );
+
+    return defaultServices;
+  }
+
+  try {
+    return JSON.parse(storedServices) as Service[];
+  } catch {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(defaultServices)
+    );
+
+    return defaultServices;
+  }
+}
+
+export let services: Service[] = loadServices();
+
+export function getServices(): Service[] {
+  services = loadServices();
+  return services;
+}
+
+export function getServiceById(
+  serviceId: string
+): Service | undefined {
+  const currentServices = loadServices();
+
+  return currentServices.find(
+    (service) => service.id === serviceId
+  );
+}
+
+export function updateService(
+  serviceId: string,
+  updates: Omit<Service, "id">
+): Service | undefined {
+  validateServiceUpdates(updates);
+
+  const currentServices = loadServices();
+
+  const serviceIndex = currentServices.findIndex(
+    (service) => service.id === serviceId
+  );
+
+  if (serviceIndex === -1) {
+    logError("Service update failed", {
+      operation: "updateService",
+      serviceId,
+      errorCode: "NOT_FOUND",
+    });
+
+    return undefined;
+  }
+
+  const updatedService: Service = {
+    ...currentServices[serviceIndex],
+    ...updates,
+    id: serviceId,
+  };
+
+  const updatedServices = [...currentServices];
+
+  updatedServices[serviceIndex] = updatedService;
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(updatedServices)
+  );
+
+  services = updatedServices;
+
+  window.dispatchEvent(
+    new Event("pigenesis-services-updated")
+  );
+
+  logInfo("Service updated", {
+    operation: "updateService",
+    serviceId,
+  });
+
+  return updatedService;
+}
+
+export function deleteService(
+  serviceId: string
+): boolean {
+  const currentServices = loadServices();
+
+  const serviceExists = currentServices.some(
+    (service) => service.id === serviceId
+  );
+
+  if (!serviceExists) {
+    logError("Service deletion failed", {
+      operation: "deleteService",
+      serviceId,
+      errorCode: "NOT_FOUND",
+    });
+
+    return false;
+  }
+
+  const updatedServices = currentServices.filter(
+    (service) => service.id !== serviceId
+  );
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(updatedServices)
+  );
+
+  services = updatedServices;
+
+  window.dispatchEvent(
+    new Event("pigenesis-services-updated")
+  );
+
+  logInfo("Service deleted", {
+    operation: "deleteService",
+    serviceId,
+  });
+
+  return true;
+}
+
+export function createService(
+  input: CreateServiceInput
+): Service {
+  validateServiceInput(input);
+
+  const currentServices = loadServices();
+
+  if (
+    currentServices.some(
+      (service) => service.id === input.id
+    )
+  ) {
+    throw new Error(
+      "A service with this ID already exists."
+    );
+  }
+
+  const service: Service = {
+    id: input.id,
+    name: input.name,
+    status: input.status,
+    description: input.description,
+    category: input.category,
+  };
+
+  const updatedServices = [
+    ...currentServices,
+    service,
+  ];
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(updatedServices)
+  );
+
+  services = updatedServices;
+
+  window.dispatchEvent(
+    new Event("pigenesis-services-updated")
+  );
+
+  return service;
+}

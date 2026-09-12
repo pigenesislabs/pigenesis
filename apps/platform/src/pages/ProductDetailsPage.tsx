@@ -1,14 +1,33 @@
-import { Link, useParams } from "react-router-dom";
-import { products } from "../services/productService";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { deleteProduct, getProductById } from "../services/productService";
 
 import StatusText from "../components/ui/StatusText";
 
 function ProductDetailsPage() {
   const { productId } = useParams();
+  const navigate = useNavigate();
+  function handleDelete() {
+    if (!product) {
+      return;
+    }
 
-  const product = products.find(
-    (item) => item.id === productId
-  );
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${product.name}"?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const deleted = deleteProduct(product.id);
+
+    if (deleted) {
+      navigate("/products");
+    }
+  }
+  const product = productId
+    ? getProductById(productId)
+    : undefined;
 
   if (!product) {
     return (
@@ -41,18 +60,38 @@ function ProductDetailsPage() {
       </Link>
 
       <div className="mt-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+          <h1 className="text-5xl font-bold text-white">
+            {product.name}
+          </h1>
           <div>
-            <h1 className="text-5xl font-bold text-white">
-              {product.name}
-            </h1>
-
-            <p className="mt-4 text-xl text-slate-400">
-              {product.description}
+            <p className="text-lg font-medium uppercase tracking-wide text-white">
+              Product ID
+            </p>
+            <p className="mt-2 text-lg font-medium text-slate-500">
+              {product.id}
             </p>
           </div>
 
-          {/*<StatusBadge status={product.status} />*/}
+          <div className="flex shrink-0 gap-3">
+            <button
+              type="button"
+              onClick={() =>
+                navigate(`/products/${product.id}/edit`)
+              }
+              className="rounded-lg bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-500"
+            >
+              Edit Product
+            </button>
+
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="rounded-lg border border-red-700 px-5 py-3 font-medium text-red-400 transition hover:border-red-500 hover:bg-red-950 hover:text-red-300"
+            >
+              Delete Product
+            </button>
+          </div>
         </div>
       </div>
 

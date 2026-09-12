@@ -10,3 +10,11 @@ export type Product = {
   description: string;
   category: string;
 };
+
+export type CreateProductInput = {
+  id: string;
+  name: string;
+  status: ProductStatus;
+  description: string;
+  category: string;
+};

@@ -1,14 +1,21 @@
-import { Link, useParams } from "react-router-dom";
-import { services } from "../services/serviceService";
+import {
+  Link,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
+import {
+  deleteService,
+  getServiceById,
+} from "../services/serviceService";
 
 import StatusText from "../components/ui/StatusText";
 
 function ServiceDetailsPage() {
   const { serviceId } = useParams();
-
-  const service = services.find(
-    (item) => item.id === serviceId
-  );
+  const navigate = useNavigate();
+  const service = serviceId
+    ? getServiceById(serviceId)
+    : undefined;
 
   if (!service) {
     return (
@@ -30,7 +37,23 @@ function ServiceDetailsPage() {
       </div>
     );
   }
+  const currentServiceId = service.id;
+  const currentServiceName = service.name;
+  function handleDelete() {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${currentServiceName}"?`
+    );
 
+    if (!confirmed) {
+      return;
+    }
+
+    const deleted = deleteService(currentServiceId);
+
+    if (deleted) {
+      navigate("/services");
+    }
+  }
   return (
     <div>
       <Link
@@ -42,17 +65,35 @@ function ServiceDetailsPage() {
 
       <div className="mt-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <h1 className="text-5xl font-bold text-white">
+            {service.name}
+          </h1>
           <div>
-            <h1 className="text-5xl font-bold text-white">
-              {service.name}
-            </h1>
+            <p className="text-lg font-medium uppercase tracking-wide text-white">
+              Service ID
+            </p>
 
-            <p className="mt-4 text-xl text-slate-400">
-              {service.description}
+            <p className="mt-2 text-lg font-medium text-slate-500">
+              {service.id}
             </p>
           </div>
 
-          {/*<StatusBadge status={service.status} />*/}
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Link
+              to={`/services/${service.id}/edit`}
+              className="rounded-lg bg-blue-600 px-5 py-3 text-center font-medium text-white hover:bg-blue-500"
+            >
+              Edit Service
+            </Link>
+
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="rounded-lg border border-red-800 px-5 py-3 font-medium text-red-400 hover:bg-red-950/40"
+            >
+              Delete Service
+            </button>
+          </div>
         </div>
       </div>
 
