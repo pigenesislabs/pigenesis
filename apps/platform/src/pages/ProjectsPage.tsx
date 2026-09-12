@@ -191,7 +191,7 @@ function ProjectsPage() {
               }
               className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-500"
             >
-              <option value="All">All Status</option>
+              <option value="All">All</option>
               <option value="Active">Active</option>
               <option value="Planning">Planning</option>
               <option value="Completed">Completed</option>

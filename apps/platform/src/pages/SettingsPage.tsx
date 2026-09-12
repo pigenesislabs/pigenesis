@@ -1,3 +1,4 @@
+import appConfig from "../config/appconfig";
 function SettingsPage() {
   return (
     <div className="space-y-8">
@@ -8,7 +9,7 @@ function SettingsPage() {
         </h1>
 
         <p className="mt-2 text-slate-400">
-          Configure the PiGenesis platform.
+          Configure the {appConfig.appName} platform.
         </p>
       </div>
 
@@ -25,7 +26,7 @@ function SettingsPage() {
             </p>
 
             <p className="mt-2 text-lg font-medium text-white">
-              PiGenesis
+              {appConfig.appName}
             </p>
           </div>
 
@@ -81,7 +82,7 @@ function SettingsPage() {
             </p>
 
             <p className="mt-2 text-lg font-medium text-white">
-              v1.0
+              {appConfig.version}
             </p>
           </div>
         </div>

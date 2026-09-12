@@ -63,13 +63,17 @@ function ProjectDetailsPage() {
 
       {/* Project Header */}
       <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="text-4xl font-bold text-white">
-            {project.name}
-          </h1>
+        <h1 className="text-4xl font-bold text-white">
+          {project.name}
+        </h1>
 
-          <p className="mt-2 text-lg text-slate-400">
-            {project.description}
+        <div>
+          <p className="text-sm font-medium uppercase tracking-wide text-white">
+            Project ID
+          </p>
+
+          <p className="mt-2 text-lg font-medium text-slate-500">
+            {project.id}
           </p>
         </div>
 

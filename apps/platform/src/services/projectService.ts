@@ -1,8 +1,139 @@
 import { createAppError } from "../utils/errorHandler";
-import { logError, logInfo, } from "../utils/logger";
-import type { CreateProjectInput, Project, } from "../types/project";
+import { logError, logInfo } from "../utils/logger";
+import type {
+  CreateProjectInput,
+  Project,
+  ProjectStatus,
+} from "../types/project";
 
 const STORAGE_KEY = "pigenesis_projects";
+
+function readProjectsFromStorage(): string | null {
+  try {
+    return localStorage.getItem(STORAGE_KEY);
+  } catch (error) {
+    logError("Project storage read failed", {
+      operation: "readProjectsFromStorage",
+      error,
+    });
+
+    throw createAppError(
+      "STORAGE_ERROR",
+      "Unable to read project data from storage."
+    );
+  }
+}
+
+function saveProjectsToStorage(projectsToSave: Project[]): void {
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(projectsToSave)
+    );
+  } catch (error) {
+    logError("Project storage write failed", {
+      operation: "saveProjectsToStorage",
+      error,
+    });
+
+    throw createAppError(
+      "STORAGE_ERROR",
+      "Unable to save project data to storage."
+    );
+  }
+}
+
+function validateProjectInput(
+  input: CreateProjectInput
+): void {
+  const projectId = input.id.trim();
+
+  if (!projectId) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Project ID is required."
+    );
+  }
+
+  if (!/^[a-z0-9-]+$/.test(projectId)) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Project ID can contain only lowercase letters, numbers, and hyphens."
+    );
+  }
+
+  if (!input.name.trim()) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Project name is required."
+    );
+  }
+
+  if (!input.description.trim()) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Project description is required."
+    );
+  }
+
+  if (!input.type.trim()) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Project type is required."
+    );
+  }
+
+  const validStatuses: ProjectStatus[] = [
+    "Planning",
+    "Active",
+    "Completed",
+  ];
+
+  if (!validStatuses.includes(input.status)) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Project status is invalid."
+    );
+  }
+}
+
+function validateProjectUpdates(
+  updates: Omit<Project, "id">
+): void {
+  if (!updates.name.trim()) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Project name is required."
+    );
+  }
+
+  if (!updates.description.trim()) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Project description is required."
+    );
+  }
+
+  if (!updates.type.trim()) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Project type is required."
+    );
+  }
+
+  const validStatuses: ProjectStatus[] = [
+    "Planning",
+    "Active",
+    "Completed",
+  ];
+
+  if (!validStatuses.includes(updates.status)) {
+    throw createAppError(
+      "VALIDATION_ERROR",
+      "Project status is invalid."
+    );
+  }
+}
 
 const defaultProjects: Project[] = [
   {
@@ -29,25 +160,22 @@ const defaultProjects: Project[] = [
 ];
 
 function loadProjects(): Project[] {
-  const storedProjects = localStorage.getItem(STORAGE_KEY);
+  const storedProjects = readProjectsFromStorage();
 
   if (!storedProjects) {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(defaultProjects)
-    );
-
+    saveProjectsToStorage(defaultProjects);
     return defaultProjects;
   }
 
   try {
     return JSON.parse(storedProjects) as Project[];
-  } catch {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(defaultProjects)
-    );
+  } catch (error) {
+    logError("Project storage data is invalid", {
+      operation: "loadProjects",
+      error,
+    });
 
+    saveProjectsToStorage(defaultProjects);
     return defaultProjects;
   }
 }
@@ -69,6 +197,7 @@ export function getProjects(): Project[] {
 export function createProject(
   input: CreateProjectInput
 ): Project {
+  validateProjectInput(input);
   const currentProjects = loadProjects();
 
   if (
@@ -101,10 +230,7 @@ export function createProject(
     project,
   ];
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(updatedProjects)
-  );
+  saveProjectsToStorage(updatedProjects);
 
   projects = updatedProjects;
 
@@ -133,6 +259,7 @@ export function updateProject(
   projectId: string,
   updates: Omit<Project, "id">
 ): Project | undefined {
+  validateProjectUpdates(updates);
   const currentProjects = loadProjects();
 
   const projectIndex = currentProjects.findIndex(
@@ -153,10 +280,7 @@ export function updateProject(
 
   updatedProjects[projectIndex] = updatedProject;
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(updatedProjects)
-  );
+  saveProjectsToStorage(updatedProjects);
 
   projects = updatedProjects;
 
@@ -167,7 +291,9 @@ export function updateProject(
   return updatedProject;
 }
 export function deleteProject(projectId: string): boolean {
-  const projectExists = projects.some(
+  const currentProjects = loadProjects();
+
+  const projectExists = currentProjects.some(
     (project) => project.id === projectId
   );
 
@@ -181,18 +307,18 @@ export function deleteProject(projectId: string): boolean {
     return false;
   }
 
-  projects = projects.filter(
+  const updatedProjects = currentProjects.filter(
     (project) => project.id !== projectId
   );
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(projects)
-  );
+  saveProjectsToStorage(updatedProjects);
+
+  projects = updatedProjects;
 
   window.dispatchEvent(
     new Event("pigenesis-projects-updated")
   );
+
   logInfo("Project deleted", {
     operation: "deleteProject",
     projectId,
