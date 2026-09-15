@@ -8,6 +8,8 @@ import {
   updateProduct,
 } from "../services/productRepository";
 
+import { ApiError } from "../types/apiError";
+
 const validStatuses = [
   "Active",
   "Planning",
@@ -25,11 +27,15 @@ function isValidStatus(
   );
 }
 
-function getProductId(request: Request): string | null {
+function getProductId(request: Request): string {
   const { id } = request.params;
 
-  if (typeof id !== "string") {
-    return null;
+  if (typeof id !== "string" || id.trim() === "") {
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Product ID is required."
+    );
   }
 
   return id;
@@ -37,93 +43,129 @@ function getProductId(request: Request): string | null {
 
 function validateProductInput(body: unknown) {
   if (!body || typeof body !== "object") {
-    return "Request body is required.";
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Request body is required."
+    );
   }
 
   const input = body as Record<string, unknown>;
 
   if (typeof input.id !== "string" || input.id.trim() === "") {
-    return "Product ID is required.";
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Product ID is required."
+    );
   }
 
   if (!/^[a-z0-9-]+$/.test(input.id)) {
-    return "Product ID must contain only lowercase letters, numbers, and hyphens.";
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Product ID must contain only lowercase letters, numbers, and hyphens."
+    );
   }
 
   if (typeof input.name !== "string" || input.name.trim() === "") {
-    return "Product name is required.";
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Product name is required."
+    );
   }
 
   if (!isValidStatus(input.status)) {
-    return "Product status must be Active, Planning, or Coming Soon.";
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Product status must be Active, Planning, or Coming Soon."
+    );
   }
 
   if (
     typeof input.description !== "string" ||
     input.description.trim() === ""
   ) {
-    return "Product description is required.";
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Product description is required."
+    );
   }
 
   if (
     typeof input.category !== "string" ||
     input.category.trim() === ""
   ) {
-    return "Product category is required.";
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Product category is required."
+    );
   }
-
-  return null;
 }
 
 function validateProductUpdate(body: unknown) {
   if (!body || typeof body !== "object") {
-    return "Request body is required.";
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Request body is required."
+    );
   }
 
   const input = body as Record<string, unknown>;
 
   if (typeof input.name !== "string" || input.name.trim() === "") {
-    return "Product name is required.";
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Product name is required."
+    );
   }
 
   if (!isValidStatus(input.status)) {
-    return "Product status must be Active, Planning, or Coming Soon.";
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Product status must be Active, Planning, or Coming Soon."
+    );
   }
 
   if (
     typeof input.description !== "string" ||
     input.description.trim() === ""
   ) {
-    return "Product description is required.";
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Product description is required."
+    );
   }
 
   if (
     typeof input.category !== "string" ||
     input.category.trim() === ""
   ) {
-    return "Product category is required.";
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Product category is required."
+    );
   }
-
-  return null;
 }
 
 export async function listProducts(
   _request: Request,
   response: Response
 ) {
-  try {
-    const products = await getProducts();
+  const products = await getProducts();
 
-    response.status(200).json({
-      data: products,
-    });
-  } catch (error) {
-    console.error("Failed to fetch products:", error);
-
-    response.status(500).json({
-      error: "Failed to fetch products.",
-    });
-  }
+  response.status(200).json({
+    data: products,
+  });
 }
 
 export async function getProduct(
@@ -132,82 +174,50 @@ export async function getProduct(
 ) {
   const productId = getProductId(request);
 
-  if (!productId) {
-    response.status(400).json({
-      error: "Product ID is required.",
-    });
+  const product = await getProductById(productId);
 
-    return;
+  if (!product) {
+    throw new ApiError(
+      404,
+      "NOT_FOUND",
+      "Product not found."
+    );
   }
 
-  try {
-    const product = await getProductById(productId);
-
-    if (!product) {
-      response.status(404).json({
-        error: "Product not found.",
-      });
-
-      return;
-    }
-
-    response.status(200).json({
-      data: product,
-    });
-  } catch (error) {
-    console.error("Failed to fetch product:", error);
-
-    response.status(500).json({
-      error: "Failed to fetch product.",
-    });
-  }
+  response.status(200).json({
+    data: product,
+  });
 }
 
 export async function createProductHandler(
   request: Request,
   response: Response
 ) {
-  const validationError = validateProductInput(request.body);
+  validateProductInput(request.body);
 
-  if (validationError) {
-    response.status(400).json({
-      error: validationError,
-    });
+  const existingProduct = await getProductById(
+    request.body.id
+  );
 
-    return;
-  }
-
-  try {
-    const existingProduct = await getProductById(
-      request.body.id
+  if (existingProduct) {
+    throw new ApiError(
+      409,
+      "DUPLICATE",
+      "A product with this ID already exists."
     );
-
-    if (existingProduct) {
-      response.status(409).json({
-        error: "A product with this ID already exists.",
-      });
-
-      return;
-    }
-
-    const product = await createProduct({
-      id: request.body.id.trim(),
-      name: request.body.name.trim(),
-      status: request.body.status,
-      description: request.body.description.trim(),
-      category: request.body.category.trim(),
-    });
-
-    response.status(201).json({
-      data: product,
-    });
-  } catch (error) {
-    console.error("Failed to create product:", error);
-
-    response.status(500).json({
-      error: "Failed to create product.",
-    });
   }
+
+  const product = await createProduct({
+    id: request.body.id.trim(),
+    name: request.body.name.trim(),
+    status: request.body.status,
+    description: request.body.description.trim(),
+    category: request.body.category.trim(),
+  });
+
+  response.status(201).json({
+    data: product,
+  });
 }
 
 export async function updateProductHandler(
@@ -216,50 +226,26 @@ export async function updateProductHandler(
 ) {
   const productId = getProductId(request);
 
-  if (!productId) {
-    response.status(400).json({
-      error: "Product ID is required.",
-    });
+  validateProductUpdate(request.body);
 
-    return;
+  const product = await updateProduct(productId, {
+    name: request.body.name.trim(),
+    status: request.body.status,
+    description: request.body.description.trim(),
+    category: request.body.category.trim(),
+  });
+
+  if (!product) {
+    throw new ApiError(
+      404,
+      "NOT_FOUND",
+      "Product not found."
+    );
   }
 
-  const validationError = validateProductUpdate(request.body);
-
-  if (validationError) {
-    response.status(400).json({
-      error: validationError,
-    });
-
-    return;
-  }
-
-  try {
-    const product = await updateProduct(productId, {
-      name: request.body.name.trim(),
-      status: request.body.status,
-      description: request.body.description.trim(),
-      category: request.body.category.trim(),
-    });
-
-    if (!product) {
-      response.status(404).json({
-        error: "Product not found.",
-      });
-
-      return;
-    }
-
-    response.status(200).json({
-      data: product,
-    });
-  } catch (error) {
-    console.error("Failed to update product:", error);
-
-    response.status(500).json({
-      error: "Failed to update product.",
-    });
-  }
+  response.status(200).json({
+    data: product,
+  });
 }
 
 export async function deleteProductHandler(
@@ -268,31 +254,15 @@ export async function deleteProductHandler(
 ) {
   const productId = getProductId(request);
 
-  if (!productId) {
-    response.status(400).json({
-      error: "Product ID is required.",
-    });
+  const deleted = await deleteProduct(productId);
 
-    return;
+  if (!deleted) {
+    throw new ApiError(
+      404,
+      "NOT_FOUND",
+      "Product not found."
+    );
   }
 
-  try {
-    const deleted = await deleteProduct(productId);
-
-    if (!deleted) {
-      response.status(404).json({
-        error: "Product not found.",
-      });
-
-      return;
-    }
-
-    response.status(204).send();
-  } catch (error) {
-    console.error("Failed to delete product:", error);
-
-    response.status(500).json({
-      error: "Failed to delete product.",
-    });
-  }
+  response.status(204).send();
 }
