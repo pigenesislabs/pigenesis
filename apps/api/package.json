@@ -1,0 +1,25 @@
+{
+  "name": "@pigenesis/api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PiGenesis Platform API",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "db:init": "tsx src/scripts/initDatabase.ts"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.1.0",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.23.1",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2"
+  }
+}

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProjects } from "../services/projectService";
 import type { Project, ProjectStatus } from "../types/project";
+import InfoTooltip from "../components/ui/InfoTooltip";
 
 function getStatusClasses(status: ProjectStatus) {
   switch (status) {
@@ -127,9 +128,16 @@ function ProjectsPage() {
       {/* Page Header */}
       <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-4xl font-bold text-white">
-            Projects
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-4xl font-bold text-white">
+              Projects
+            </h1>
+
+            <InfoTooltip
+              title="Projects"
+              description="Projects represent initiatives or bodies of work that PiGenesis is building, improving, researching, or executing. Add a clear Project ID, name, type, status, and meaningful description."
+            />
+          </div>
 
           <p className="mt-2 text-lg text-slate-400">
             Manage PiGenesis engineering projects.
@@ -231,7 +239,6 @@ function ProjectsPage() {
       </div>
 
       {/* Project Count */}
-      {/* Project Count */}
       <div className="mt-6">
         <p className="text-sm text-slate-500">
           Showing{" "}
@@ -280,13 +287,8 @@ function ProjectsPage() {
                 </span>
               </div>
 
-              {/* Description */}
-              <p className="mt-5 line-clamp-3 text-sm leading-6 text-slate-400">
-                {project.description}
-              </p>
-
               {/* Project Type */}
-              <div className="mt-6 border-t border-slate-800 pt-4">
+              <div className="mt-5 border-t border-slate-800 pt-4">
                 <p className="text-xs uppercase tracking-wide text-slate-500">
                   Type
                 </p>

@@ -6,6 +6,7 @@ import type {
   ServiceStatus,
 } from "../types/service";
 import StatusBadge from "../components/ui/StatusBadge";
+import InfoTooltip from "../components/ui/InfoTooltip";
 
 type ServiceSortOption =
   | "name-asc"
@@ -112,10 +113,15 @@ function ServicesPage() {
       {/* Page Header */}
       <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-4xl font-bold text-white">
-            Services
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-4xl font-bold text-white">
+              Services
+            </h1>
 
+            <InfoTooltip
+              title="Services"
+              description="Services represent capabilities or services that PiGenesis provides to customers or organizations. Add a clear Service ID, name, category, status, and meaningful description." />
+          </div>
           <p className="mt-2 text-lg text-slate-400">
             PiGenesis services and capabilities.
           </p>
@@ -170,8 +176,8 @@ function ServicesPage() {
               onChange={(event) =>
                 setStatusFilter(
                   event.target.value as
-                    | ServiceStatus
-                    | "All"
+                  | ServiceStatus
+                  | "All"
                 )
               }
               className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-500"
@@ -276,13 +282,8 @@ function ServicesPage() {
                   />
                 </div>
 
-                {/* Description */}
-                <p className="mt-5 line-clamp-3 text-sm leading-6 text-slate-400">
-                  {service.description}
-                </p>
-
                 {/* Service Category */}
-                <div className="mt-6 border-t border-slate-800 pt-4">
+                <div className="mt-5 border-t border-slate-800 pt-4">
                   <p className="text-xs uppercase tracking-wide text-slate-500">
                     Category
                   </p>
