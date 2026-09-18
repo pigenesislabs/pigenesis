@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 const databaseConfig = {
   host: process.env.DB_HOST ?? "localhost",
   port: process.env.DB_PORT
