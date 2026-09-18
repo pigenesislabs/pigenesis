@@ -1,186 +1,239 @@
 import type { Request, Response } from "express";
+
 import {
-    createUser,
-    editUser,
-    getUserById,
-    getUsers,
-    removeUser,
+  createUser,
+  editUser,
+  getUserById,
+  getUsers,
+  removeUser,
 } from "../services/userService";
 
+import { ApiError } from "../types/apiError";
+
+const validStatuses = [
+  "Active",
+  "Invited",
+  "Suspended",
+  "Disabled",
+] as const;
+
+function isValidStatus(
+  value: unknown
+): value is (typeof validStatuses)[number] {
+  return (
+    typeof value === "string" &&
+    validStatuses.includes(value as (typeof validStatuses)[number])
+  );
+}
+
+function getUserId(request: Request): string {
+  const { id } = request.params;
+
+  if (typeof id !== "string" || id.trim() === "") {
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "User ID is required."
+    );
+  }
+
+  return id.trim();
+}
+
+function validateEmail(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    value.trim() !== "" &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())
+  );
+}
+
+function validateUserInput(body: unknown) {
+  if (!body || typeof body !== "object") {
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Request body is required."
+    );
+  }
+
+  const input = body as Record<string, unknown>;
+
+  if (typeof input.id !== "string" || input.id.trim() === "") {
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "User ID is required."
+    );
+  }
+
+  if (!/^[a-z0-9-]+$/.test(input.id.trim())) {
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "User ID must contain only lowercase letters, numbers, and hyphens."
+    );
+  }
+
+  if (!validateEmail(input.email)) {
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "A valid user email is required."
+    );
+  }
+
+  if (
+    typeof input.displayName !== "string" ||
+    input.displayName.trim() === ""
+  ) {
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "User display name is required."
+    );
+  }
+
+  if (!isValidStatus(input.status)) {
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "User status must be Active, Invited, Suspended, or Disabled."
+    );
+  }
+}
+
+function validateUserUpdate(body: unknown) {
+  if (!body || typeof body !== "object") {
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Request body is required."
+    );
+  }
+
+  const input = body as Record<string, unknown>;
+
+  if (!validateEmail(input.email)) {
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "A valid user email is required."
+    );
+  }
+
+  if (
+    typeof input.displayName !== "string" ||
+    input.displayName.trim() === ""
+  ) {
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "User display name is required."
+    );
+  }
+
+  if (!isValidStatus(input.status)) {
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "User status must be Active, Invited, Suspended, or Disabled."
+    );
+  }
+}
+
 export async function listUsers(
-    _req: Request,
-    res: Response
+  _request: Request,
+  response: Response
 ): Promise<void> {
-    try {
-        const users = await getUsers();
+  const users = await getUsers();
 
-        res.status(200).json({
-            data: users,
-        });
-    } catch (error) {
-        console.error("Failed to list users:", error);
-
-        res.status(500).json({
-            error: "Failed to retrieve users.",
-        });
-    }
+  response.status(200).json({
+    data: users,
+  });
 }
 
 export async function getUser(
-    req: Request,
-    res: Response
+  request: Request,
+  response: Response
 ): Promise<void> {
-    try {
-        const userId = Array.isArray(req.params.id)
-            ? req.params.id[0]
-            : req.params.id;
+  const userId = getUserId(request);
 
-        if (!userId) {
-            res.status(400).json({
-                error: "User ID is required.",
-            });
-            return;
-        }
+  const user = await getUserById(userId);
 
-        const user = await getUserById(userId);
+  if (!user) {
+    throw new ApiError(
+      404,
+      "NOT_FOUND",
+      "User not found."
+    );
+  }
 
-        if (!user) {
-            res.status(404).json({
-                error: "User not found.",
-            });
-            return;
-        }
-
-        res.status(200).json({
-            data: user,
-        });
-    } catch (error) {
-        console.error("Failed to retrieve user:", error);
-
-        res.status(500).json({
-            error: "Failed to retrieve user.",
-        });
-    }
+  response.status(200).json({
+    data: user,
+  });
 }
 
 export async function createNewUser(
-    req: Request,
-    res: Response
+  request: Request,
+  response: Response
 ): Promise<void> {
-    try {
-        const { id, email, displayName, status } = req.body;
-        if (!id || !email || !displayName || !status) {
-            res.status(400).json({
-                error:
-                    "id, email, displayName and status are required.",
-            });
-            return;
-        }
+  validateUserInput(request.body);
 
-        const user = await createUser({
-            id,
-            email,
-            displayName,
-            status,
-        });
+  const user = await createUser({
+    id: request.body.id.trim(),
+    email: request.body.email.trim(),
+    displayName: request.body.displayName.trim(),
+    status: request.body.status,
+  });
 
-        res.status(201).json({
-            data: user,
-        });
-    } catch (error) {
-        if (
-            error instanceof Error &&
-            error.message.includes("already exists")
-        ) {
-            res.status(409).json({
-                error: error.message,
-            });
-            return;
-        }
-
-        console.error("Failed to create user:", error);
-
-        res.status(500).json({
-            error: "Failed to create user.",
-        });
-    }
+  response.status(201).json({
+    data: user,
+  });
 }
 
 export async function updateExistingUser(
-    req: Request,
-    res: Response
+  request: Request,
+  response: Response
 ): Promise<void> {
-    try {
-        const { email, displayName, status } = req.body;
-        const userId = Array.isArray(req.params.id)
-            ? req.params.id[0]
-            : req.params.id;
-        if (!email || !displayName || !status) {
-            res.status(400).json({
-                error:
-                    "email, displayName and status are required.",
-            });
-            return;
-        }
+  const userId = getUserId(request);
 
-        const user = await editUser(userId, {
-            email,
-            displayName,
-            status,
-        });
+  validateUserUpdate(request.body);
 
-        if (!user) {
-            res.status(404).json({
-                error: "User not found.",
-            });
-            return;
-        }
+  const user = await editUser(userId, {
+    email: request.body.email.trim(),
+    displayName: request.body.displayName.trim(),
+    status: request.body.status,
+  });
 
-        res.status(200).json({
-            data: user,
-        });
-    } catch (error) {
-        if (
-            error instanceof Error &&
-            error.message.includes("already exists")
-        ) {
-            res.status(409).json({
-                error: error.message,
-            });
-            return;
-        }
+  if (!user) {
+    throw new ApiError(
+      404,
+      "NOT_FOUND",
+      "User not found."
+    );
+  }
 
-        console.error("Failed to update user:", error);
-
-        res.status(500).json({
-            error: "Failed to update user.",
-        });
-    }
+  response.status(200).json({
+    data: user,
+  });
 }
 
 export async function deleteExistingUser(
-    req: Request,
-    res: Response
+  request: Request,
+  response: Response
 ): Promise<void> {
-    try {
-        const userId = Array.isArray(req.params.id)
-            ? req.params.id[0]
-            : req.params.id;
-        const deleted = await removeUser(userId);
+  const userId = getUserId(request);
 
-        if (!deleted) {
-            res.status(404).json({
-                error: "User not found.",
-            });
-            return;
-        }
+  const deleted = await removeUser(userId);
 
-        res.status(204).send();
-    } catch (error) {
-        console.error("Failed to delete user:", error);
+  if (!deleted) {
+    throw new ApiError(
+      404,
+      "NOT_FOUND",
+      "User not found."
+    );
+  }
 
-        res.status(500).json({
-            error: "Failed to delete user.",
-        });
-    }
+  response.status(204).send();
 }

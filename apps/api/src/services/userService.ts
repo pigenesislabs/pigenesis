@@ -9,6 +9,8 @@ import {
   type UserStatus,
 } from "./userRepository";
 
+import { ApiError } from "../types/apiError";
+
 export type CreateUserInput = {
   id: string;
   email: string;
@@ -38,7 +40,11 @@ export async function createUser(
   const existingUser = await findUserByEmail(input.email);
 
   if (existingUser) {
-    throw new Error("A user with this email already exists.");
+    throw new ApiError(
+      409,
+      "DUPLICATE",
+      "A user with this email already exists."
+    );
   }
 
   return insertUser(input);
@@ -50,11 +56,12 @@ export async function editUser(
 ): Promise<UserRecord | null> {
   const existingUser = await findUserByEmail(input.email);
 
-  if (
-    existingUser &&
-    existingUser.id !== userId
-  ) {
-    throw new Error("A user with this email already exists.");
+  if (existingUser && existingUser.id !== userId) {
+    throw new ApiError(
+      409,
+      "DUPLICATE",
+      "A user with this email already exists."
+    );
   }
 
   return updateUser(userId, input);
